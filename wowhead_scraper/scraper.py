@@ -18,8 +18,6 @@ class WowheadScraper:
         # Initialise expected row amount dictionary
         self.expected_row_amount = {}
 
-        print('Starting...')
-
     def start_driver(self):
 
         # Set headless option
@@ -30,6 +28,8 @@ class WowheadScraper:
         return webdriver.Firefox(options=options)
 
     def update_psvs(self):
+
+        print('Starting...')
 
         # Start recording time
         start_time = time.time()
