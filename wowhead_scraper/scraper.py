@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import *
 from selenium.common.exceptions import *
@@ -23,7 +24,6 @@ class WowheadScraper:
         # Set headless option
         options = Options()
         options.headless = True
-
         # Start and return driver
         return webdriver.Firefox(options=options)
 
@@ -168,7 +168,7 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[1].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 profession_link_url = 'https://classic.wowhead.com/' + (name.lower()).replace(' ', '-')
                 icon_link_url = tds[0].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
                 is_main_profession = True
@@ -198,7 +198,7 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[1].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 if name in secondary_professions:
                     profession_link_url = 'https://classic.wowhead.com/' + (name.lower()).replace(' ', '-')
                     icon_link_url = tds[0].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
@@ -255,9 +255,9 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[0].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[0].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 location_link_url = 'https://classic.wowhead.com/' + \
-                                    ((name.lower()).replace(' ', '-')).replace('\'', '')
+                                    ((name.lower()).replace(' ', '-')).replace("'", '')
                 faction_status = tds[2].find_element_by_tag_name('span').get_attribute('innerText')
 
                 # Write row to locations file
@@ -331,7 +331,7 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[1].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 vendor_link_url = tds[1].find_element_by_tag_name('a').get_attribute('href')
                 reaction_to_alliance = 'Hostile'
                 reaction_to_horde = 'Hostile'
@@ -356,12 +356,12 @@ class WowheadScraper:
 
                 # Get location ids
                 vendors = self.read_psv('vendor')[1]
-                vendor_id = vendors.index(vendors[-1])
+                vendor_id = vendors.index(vendors[-1]) + 1
                 vendor_locations = tds[3].find_elements_by_tag_name('a')
                 if len(vendor_locations) > 0:
                     for vendor_location in vendor_locations:
-                        name = vendor_location.get_attribute('innerText')
-                        location_id = location_names.index(name)
+                        name = (vendor_location.get_attribute('innerText')).replace("'", "''")
+                        location_id = location_names.index(name) + 1
 
                         # Link vendors to locations
                         self.write_psv_lines('vendor_has_location', tuple([(vendor_id,
@@ -457,7 +457,7 @@ class WowheadScraper:
 
                 # Get reagent row data
                 tds = self.get_row_data(row)
-                name = tds[2].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 item_link_url = tds[2].find_element_by_tag_name('a').get_attribute('href')
                 icon_link_url = tds[1].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
 
@@ -468,40 +468,41 @@ class WowheadScraper:
 
                 # Get current reagent id
                 reagents = self.read_psv('reagent')[1]
-                reagent_id = reagents.index(reagents[-1])
+                reagent_id = reagents.index(reagents[-1]) + 1
 
                 try:
                     div_text = tds[8].find_element_by_tag_name('div').get_attribute('innerText')
                     if 'Vendor' in div_text or 'Vendors' in div_text:
-                        self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
+                        self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 4)]))
                     else:
                         if div_text in location_names:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
-                        if div_text in profession_names:
                             self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                        if div_text in profession_names:
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
 
                 except NoSuchElementException:
                     try:
-                        div_link = tds[8].find_element_by_tag_name('a').get_attribute('innerText')
+                        div_link = (tds[8].find_element_by_tag_name('a').get_attribute('innerText')).replace("'",
+                                                                                                             "''")
 
                         # Check exceptions
                         if div_link == 'Evergreen Herb Casing':
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
 
                         if div_link == 'Anubisath Guardian':
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
 
                     except NoSuchElementException:
-                        name = tds[2].find_element_by_tag_name('a').get_attribute('innerText')
+                        name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                         sources = tds[8].get_attribute('innerText')
 
                         # Check if sources is empty
                         if sources == '':
                             # Check exception
                             if name == 'Refined Deeprock Salt':
-                                self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                                self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
                             else:
-                                self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 0)]))
+                                self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
 
                         # Check if source is gathered
                         if 'Gathered' in sources or \
@@ -509,19 +510,19 @@ class WowheadScraper:
                                 'Skinned' in sources or \
                                 'Mined' in sources or \
                                 'Fished' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 0)]))
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
 
                         # Check if source is dropped
                         if 'Drop' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
 
                         # Check if source is crafted
                         if 'Crafted' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
 
                         # Check if source is bought
                         if 'Vendor' in sources or 'Vendors' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
+                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 4)]))
 
             # Check if on last page
             if self.check_if_on_last_page():
@@ -541,20 +542,27 @@ class WowheadScraper:
         reagent_has_source = self.read_psv('reagent_has_source')[1]
         for reagent in reagents:
 
-            print('\rGetting reagent {} of {}.'.format(reagents.index(reagent) + 1, len(reagents)), end='')
+            # Get reagent_id
+            reagent_id = reagents.index(reagent) + 1
+
+            print('\rGetting reagent {} of {}.'.format(reagent_id, len(reagents)), end='')
 
             for row in reagent_has_source:
-                if reagents.index(reagent) == int(row[0]) and int(row[1]) == 3:
+                if reagent_id == int(row[0]) and int(row[1]) == 4:
 
                     # Load reagent details page
                     self.load_page(reagent[1])
 
                     # Check if tab exists and click it
                     if self.check_if_tab_label_exists(reagent[1], '#sold-by'):
-                        self.get_tab_label(reagent[1], '#sold-by').click()
+                        bottom_advertisement_not_found = True
+                        while bottom_advertisement_not_found:
+                            try:
+                                self.get_tab_label(reagent[1], '#sold-by').click()
+                                bottom_advertisement_not_found = False
+                            except ElementClickInterceptedException:
+                                self.remove_bottom_advertisement()
 
-                        # Get reagent_id
-                        reagent_id = reagents.index(reagent)
 
                         # Get vendor names
                         vendor_names = []
@@ -604,8 +612,8 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                vendor_name = tds[1].find_element_by_tag_name('a').get_attribute('innerText')
-                vendor_id = vendor_names.index(vendor_name)
+                vendor_name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
+                vendor_id = vendor_names.index(vendor_name) + 1
                 buy_price = self.get_money_amount(tds[6])
 
                 # Write line to reagent has vendor psv file
@@ -624,13 +632,12 @@ class WowheadScraper:
                                          'item_link_url',
                                          'icon_link_url',
                                          'item_slot',
-                                         'sell_price',
-                                         'recipe_id',
-                                         'profession_id')])
+                                         'sell_price')])
         self.create_psv('craftable_item', craftable_item_columns)
 
         # Get craftable items for each profession
         craftable_item_length = 0
+        craftable_item_names = []
         professions = self.read_psv('profession')[1]
         for profession in professions:
 
@@ -640,9 +647,6 @@ class WowheadScraper:
 
             # Load craftable items index
             self.load_page('https://classic.wowhead.com/items')
-
-            # Get profession id
-            profession_id = professions.index(profession)
 
             # Apply filters
             self.apply_filters([{
@@ -660,7 +664,7 @@ class WowheadScraper:
             # Get craftable items row data
             try:
                 try:
-                    self.get_craftable_items_row_data(profession_id)
+                    self.get_craftable_items_row_data(craftable_item_names)
                 except NoRowsFoundException:
                     continue
             except StaleElementReferenceException:
@@ -673,7 +677,7 @@ class WowheadScraper:
                 self.create_psv('craftable_item', craftable_item_columns)
                 self.write_psv_lines('craftable_item', old_rows)
 
-                self.get_craftable_items_row_data(profession_id)
+                self.get_craftable_items_row_data(craftable_item_names)
 
             # Update craftable item length
             craftable_item_length = len(self.read_psv('craftable_item')[1])
@@ -683,7 +687,7 @@ class WowheadScraper:
                 self.expected_row_amount['craftable_item'] = 0
             self.expected_row_amount['craftable_item'] += self.get_expected_row_amount()
 
-    def get_craftable_items_row_data(self, profession_id):
+    def get_craftable_items_row_data(self, craftable_item_names):
 
         not_on_last_page = True
         while not_on_last_page:
@@ -701,29 +705,27 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[2].find_element_by_tag_name('a').get_attribute('innerText')
-                item_link_url = tds[2].find_element_by_tag_name('a').get_attribute('href')
-                icon_link_url = tds[1].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
+                name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
+                if name not in craftable_item_names:
+                    item_link_url = tds[2].find_element_by_tag_name('a').get_attribute('href')
+                    icon_link_url = tds[1].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
 
-                # Replace empty string with standard value
-                item_slot = tds[7].get_attribute('innerText')
-                if item_slot == '':
-                    item_slot = 'Not equipable'
+                    # Replace empty string with standard value
+                    item_slot = tds[7].get_attribute('innerText')
+                    if item_slot == '':
+                        item_slot = 'Not equipable'
 
-                sell_price = tds[8].get_attribute('innerText')
-                if sell_price == '':
-                    sell_price = None
+                    sell_price = tds[8].get_attribute('innerText')
+                    if sell_price == '':
+                        sell_price = None
 
-                recipe_id = None
-
-                # Write line to craftable item psv file
-                self.write_psv_lines('craftable_item', tuple([(name,
-                                                               item_link_url,
-                                                               icon_link_url,
-                                                               item_slot,
-                                                               sell_price,
-                                                               recipe_id,
-                                                               profession_id)]))
+                    # Write line to craftable item psv file
+                    self.write_psv_lines('craftable_item', tuple([(name,
+                                                                   item_link_url,
+                                                                   icon_link_url,
+                                                                   item_slot,
+                                                                   sell_price)]))
+                    craftable_item_names.append(name)
 
             # Check if on last page
             if self.check_if_on_last_page():
@@ -736,7 +738,6 @@ class WowheadScraper:
                                   'trainer_link_url',
                                   'reaction_to_alliance',
                                   'reaction_to_horde',
-                                  'profession_id',
                                   'location_id')])
         self.create_psv('trainer', trainer_columns)
 
@@ -757,9 +758,11 @@ class WowheadScraper:
                                  'difficulty_category_4',
                                  'recipe_link_url',
                                  'icon_link_url',
-                                 'amount_created',
+                                 'minimum_amount_created',
+                                 'maximum_amount_created',
                                  'training_cost',
                                  'recipe_item_id',
+                                 'craftable_item_id',
                                  'profession_id')])
         self.create_psv('recipe', recipe_columns)
 
@@ -769,12 +772,45 @@ class WowheadScraper:
                                              'amount')])
         self.create_psv('recipe_has_reagent', recipe_has_reagent_columns)
 
+        # Create trainer_has_profession
+        trainer_has_profession = tuple([('trainer_id',
+                                         'profession_id')])
+        self.create_psv('trainer_has_profession', trainer_has_profession)
+
+        # Get location names
+        location_names = []
+        locations = self.read_psv('location')[1]
+        for location in locations:
+            location_names.append(location[0])
+        location_names = tuple(location_names)
+
+        # Get craftable link urls
+        craftable_item_link_urls = []
+        craftable_items = self.read_psv('craftable_item')[1]
+        for item in craftable_items:
+            craftable_item_link_urls.append(item[1])
+        craftable_item_link_urls = tuple(craftable_item_link_urls)
+
+        # Get reagent link urls
+        reagent_link_urls = []
+        reagents = self.read_psv('reagent')[1]
+        for reagent in reagents:
+            reagent_link_urls.append(reagent[1])
+        reagent_link_urls = tuple(reagent_link_urls)
+
+        # Get vendor names
+        vendor_names = []
+        vendors = self.read_psv('vendor')[1]
+        for vendor in vendors:
+            vendor_names.append(vendor[0])
+        vendor_names = tuple(vendor_names)
+
         # Get all remaining data for each profession
         trainer_length = 0
         recipe_item_length = 0
         recipe_length = 0
         recipe_has_reagent_length = 0
-        craftable_item_id_list = []
+        trainers = []
         professions = self.read_psv('profession')[1]
         for profession in professions:
 
@@ -782,36 +818,21 @@ class WowheadScraper:
             self.load_page(profession[1])
 
             # Get profession id
-            profession_id = professions.index(profession)
-
-            # Get location names
-            location_names = []
-            locations = self.read_psv('location')[1]
-            for location in locations:
-                location_names.append(location[0])
-            location_names = tuple(location_names)
-
-            # Get craftable link urls
-            craftable_item_link_urls = []
-            craftable_items = self.read_psv('craftable_item')[1]
-            for item in craftable_items:
-                craftable_item_link_urls.append(item[1])
-            craftable_item_link_urls = tuple(craftable_item_link_urls)
-
-            # Get reagent link urls
-            reagent_link_urls = []
-            reagents = self.read_psv('reagent')[1]
-            for reagent in reagents:
-                reagent_link_urls.append(reagent[1])
-            reagent_link_urls = tuple(reagent_link_urls)
+            profession_id = professions.index(profession) + 1
 
             # Check if trainers tab exists and click it
             if self.check_if_tab_label_exists(profession[1], '#trainers'):
-                self.get_tab_label(profession[1], '#trainers').click()
+                bottom_advertisement_not_found = True
+                while bottom_advertisement_not_found:
+                    try:
+                        self.get_tab_label(profession[1], '#trainers').click()
+                        bottom_advertisement_not_found = False
+                    except ElementClickInterceptedException:
+                        self.remove_bottom_advertisement()
 
                 # Get trainers row data
                 try:
-                    self.get_trainers_row_data(profession_id, location_names)
+                    self.get_trainers_row_data(profession_id, location_names, trainers)
                 except StaleElementReferenceException:
 
                     # Reset trainers to previous profession
@@ -823,7 +844,7 @@ class WowheadScraper:
                     self.write_psv_lines('trainer', old_rows)
 
                     # Try again
-                    self.get_trainers_row_data(profession_id, location_names)
+                    self.get_trainers_row_data(profession_id, location_names, trainers)
 
                 # Update trainer length
                 trainer_length = len(self.read_psv('trainer')[1])
@@ -835,7 +856,13 @@ class WowheadScraper:
 
             # Check if recipe items tab exists and click it
             if self.check_if_tab_label_exists(profession[1], '#recipe-items'):
-                self.get_tab_label(profession[1], '#recipe-items').click()
+                bottom_advertisement_not_found = True
+                while bottom_advertisement_not_found:
+                    try:
+                        self.get_tab_label(profession[1], '#recipe-items').click()
+                        bottom_advertisement_not_found = False
+                    except ElementClickInterceptedException:
+                        self.remove_bottom_advertisement()
 
                 # Get recipe items row data
                 try:
@@ -862,14 +889,20 @@ class WowheadScraper:
 
             # Check if recipes tab exists and click it
             if self.check_if_tab_label_exists(profession[1], '#recipes'):
-                self.get_tab_label(profession[1], '#recipes').click()
+                bottom_advertisement_not_found = True
+                while bottom_advertisement_not_found:
+                    try:
+                        self.get_tab_label(profession[1], '#recipes').click()
+                        bottom_advertisement_not_found = False
+                    except ElementClickInterceptedException:
+                        self.remove_bottom_advertisement()
 
                 # Get recipes row data
                 try:
                     self.get_recipes_row_data(profession_id,
-                                              craftable_item_id_list,
                                               reagent_link_urls,
-                                              craftable_item_link_urls)
+                                              craftable_item_link_urls,
+                                              vendor_names)
                 except StaleElementReferenceException:
 
                     # Reset recipes to previous profession
@@ -880,19 +913,11 @@ class WowheadScraper:
                     self.create_psv('recipe', recipe_columns)
                     self.write_psv_lines('recipe', old_rows)
 
-                    # Reset recipe has reagent to previous profession
-                    # Get all rows except the new ones
-                    old_rows = self.read_psv('recipe_has_reagent')[1][0:recipe_has_reagent_length]
-
-                    # Reset recipe file and write old rows
-                    self.create_psv('recipe_has_reagent', recipe_has_reagent_columns)
-                    self.write_psv_lines('recipe_has_reagent', old_rows)
-
                     # Try again
                     self.get_recipes_row_data(profession_id,
-                                              craftable_item_id_list,
                                               reagent_link_urls,
-                                              craftable_item_link_urls)
+                                              craftable_item_link_urls,
+                                              vendor_names)
 
                 # Update lengths
                 recipe_length = len(self.read_psv('recipe')[1])
@@ -903,13 +928,7 @@ class WowheadScraper:
                     self.expected_row_amount['recipe'] = 0
                 self.expected_row_amount['recipe'] += self.get_expected_row_amount(tab_id='tab-recipes')
 
-        # Replace old with new values
-        new_values = {
-            '5': craftable_item_id_list
-        }
-        self.replace_values_in_psv_file('craftable_item', new_values)
-
-    def get_trainers_row_data(self, profession_id, location_names):
+    def get_trainers_row_data(self, profession_id, location_names, trainers):
 
         not_on_last_page = True
         while not_on_last_page:
@@ -923,38 +942,54 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[1].find_element_by_tag_name('a').get_attribute('innerText')
-                trainer_link_url = tds[1].find_element_by_tag_name('a').get_attribute('href')
-                reaction_to_alliance = 'Hostile'
-                reaction_to_horde = 'Hostile'
-                known_alliances = tds[4].find_elements_by_tag_name('span')
-                for span in known_alliances:
-                    if span.get_attribute('innerText') == 'A':
-                        if span.get_attribute('class') == 'q2':
-                            reaction_to_alliance = 'Friendly'
-                        elif span.get_attribute('class') == 'q':
-                            reaction_to_alliance = 'Neutral'
-                    if span.get_attribute('innerText') == 'H':
-                        if span.get_attribute('class') == 'q2':
-                            reaction_to_horde = 'Friendly'
-                        elif span.get_attribute('class') == 'q':
-                            reaction_to_horde = 'Neutral'
+                name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
+                trainer_id = None
+                for trainer in trainers:
+                    if trainer[1] == name:
+                        trainer_id = trainer[0]
 
-                location_id = None
-                try:
-                    location_name = tds[3].find_element_by_tag_name('a').get_attribute('innerText')
-                    if location_name in location_names:
-                        location_id = location_names.index(location_name)
-                except NoSuchElementException:
-                    pass
+                if trainer_id is None:
+                    trainer_link_url = tds[1].find_element_by_tag_name('a').get_attribute('href')
+                    reaction_to_alliance = 'Hostile'
+                    reaction_to_horde = 'Hostile'
+                    known_alliances = tds[4].find_elements_by_tag_name('span')
+                    for span in known_alliances:
+                        if span.get_attribute('innerText') == 'A':
+                            if span.get_attribute('class') == 'q2':
+                                reaction_to_alliance = 'Friendly'
+                            elif span.get_attribute('class') == 'q':
+                                reaction_to_alliance = 'Neutral'
+                        if span.get_attribute('innerText') == 'H':
+                            if span.get_attribute('class') == 'q2':
+                                reaction_to_horde = 'Friendly'
+                            elif span.get_attribute('class') == 'q':
+                                reaction_to_horde = 'Neutral'
 
-                # Write row to trainer psv file
-                self.write_psv_lines('trainer', tuple([(name,
-                                                        trainer_link_url,
-                                                        reaction_to_alliance,
-                                                        reaction_to_horde,
-                                                        profession_id,
-                                                        location_id)]))
+                    location_id = None
+                    try:
+                        location_name = tds[3].find_element_by_tag_name('a').get_attribute('innerText')
+                        if location_name in location_names:
+                            location_id = location_names.index(location_name) + 1
+                    except NoSuchElementException:
+                        pass
+
+                    # Write row to trainer psv file
+                    self.write_psv_lines('trainer', tuple([(name,
+                                                            trainer_link_url,
+                                                            reaction_to_alliance,
+                                                            reaction_to_horde,
+                                                            location_id)]))
+
+                    if len(trainers) > 0:
+                        trainers.sort(key=lambda tup: tup[0])
+                        trainer_id = trainers[-1][0] + 1
+                    else:
+                        trainer_id = 1
+                    trainers.append(tuple([trainer_id, name]))
+
+                # Write row to trainer has profession
+                self.write_psv_lines('trainer_has_profession', tuple([(trainer_id,
+                                                                       profession_id)]))
 
             # Check if on last page
             if self.check_if_on_last_page(tab_id='tab-trainers'):
@@ -974,7 +1009,7 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[2].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 item_link_url = tds[2].find_element_by_tag_name('a').get_attribute('href')
                 icon_link_url = tds[1].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
                 required_skill_level = tds[7].get_attribute('innerText')
@@ -992,23 +1027,28 @@ class WowheadScraper:
 
     def get_recipes_row_data(self,
                              profession_id,
-                             craftable_item_id_list,
                              reagent_link_urls,
-                             craftable_item_link_urls):
+                             craftable_item_link_urls,
+                             vendor_names):
 
         not_on_last_page = True
         while not_on_last_page:
+
+            # Initialise not existent reagent list
+            not_existent_reagents = []
 
             # Get rows
             rows = self.get_rows(tab_id='tab-recipes')
 
             for row in rows:
+
                 # Remove video if it still exists
                 self.remove_video()
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace('\"', '\'')
+                name = ((tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")) \
+                    .replace('"', "''")
 
                 try:
                     difficulty_requirement = tds[5].find_elements_by_tag_name('div')[0].find_element_by_tag_name(
@@ -1042,13 +1082,33 @@ class WowheadScraper:
 
                 recipe_link_url = tds[2].find_element_by_tag_name('a').get_attribute('href')
                 icon_link_url = tds[1].find_element_by_tag_name('ins').get_attribute('style')[23:-3]
-                amount_created = 1
+                minimum_amount_created = maximum_amount_created = 1
+
                 try:
-                    amount_created = tds[1].find_element_by_tag_name('span').find_elements_by_tag_name('div')[
-                        0].get_attribute('innerText')
+                    amounts_created = (tds[1]
+                                       .find_element_by_tag_name('span')
+                                       .find_elements_by_tag_name('div')[0]
+                                       .get_attribute('innerText')) \
+                        .split('-')
+                    if len(amounts_created) == 2:
+                        minimum_amount_created = amounts_created[0]
+                        maximum_amount_created = amounts_created[1]
+                    elif len(amounts_created) == 1:
+                        minimum_amount_created = maximum_amount_created = amounts_created[0]
+
                 except NoSuchElementException:
                     pass
+
                 training_cost = None
+
+                craftable_item_id = None
+                craftable_item_url = tds[1] \
+                    .find_element_by_class_name('iconmedium') \
+                    .find_element_by_tag_name('a') \
+                    .get_attribute('href')
+                if craftable_item_url in craftable_item_link_urls:
+                    craftable_item_id = craftable_item_link_urls.index(craftable_item_url) + 1
+
                 recipe_item_id = None
 
                 # Write row to recipe psv file
@@ -1060,16 +1120,18 @@ class WowheadScraper:
                                                        difficulty_category_4,
                                                        recipe_link_url,
                                                        icon_link_url,
-                                                       amount_created,
+                                                       minimum_amount_created,
+                                                       maximum_amount_created,
                                                        training_cost,
                                                        recipe_item_id,
+                                                       craftable_item_id,
                                                        profession_id)]))
 
                 # Link recipe to reagents
                 recipe_reagents = tds[3].find_elements_by_class_name('iconmedium')
                 recipes = self.read_psv('recipe')[1]
                 last_recipe = self.read_psv('recipe')[1][-1]
-                recipe_id = recipes.index(last_recipe)
+                recipe_id = recipes.index(last_recipe) + 1
                 for recipe_reagent in recipe_reagents:
                     try:
                         amount = recipe_reagent \
@@ -1079,9 +1141,24 @@ class WowheadScraper:
                     except NoSuchElementException:
                         amount = 1
                     reagent_link_url = recipe_reagent.find_element_by_tag_name('a').get_attribute('href')
-                    reagent_id = None
                     if reagent_link_url in reagent_link_urls:
-                        reagent_id = reagent_link_urls.index(reagent_link_url)
+                        reagent_id = reagent_link_urls.index(reagent_link_url) + 1
+                    else:
+
+                        # Check if there already are not existent reagents
+                        reagent_id = len(reagent_link_urls) + 1
+                        reagent_icon_link = recipe_reagent.find_element_by_tag_name('ins').get_attribute('style')[23:-3]
+                        if len(not_existent_reagents) > 0:
+                            # Check if reagent link url matches with one
+                            for reagent in not_existent_reagents:
+                                if reagent_link_url == reagent[1]:
+                                    reagent_id = reagent[0]
+                                else:
+                                    not_existent_reagents.sort(key=lambda tup: tup[0])
+                                    reagent_id = not_existent_reagents[-1][0] + 1
+                                    not_existent_reagents.append(tuple([reagent_id, reagent_link_url, reagent_icon_link]))
+                        else:
+                            not_existent_reagents.append(tuple([reagent_id, reagent_link_url, reagent_icon_link]))
 
                     # Write row to recipe has reagent psv file
                     self.write_psv_lines('recipe_has_reagent', tuple([(recipe_id,
@@ -1093,23 +1170,77 @@ class WowheadScraper:
                     self.expected_row_amount['recipe_has_reagent'] = 0
                 self.expected_row_amount['recipe_has_reagent'] += len(recipe_reagents)
 
-                # Link craftable item to recipe
-                craftable_item_link_url = tds[1] \
-                    .find_element_by_class_name('iconmedium') \
-                    .find_element_by_tag_name('a') \
-                    .get_attribute('href')
-                if craftable_item_link_url in craftable_item_link_urls:
-                    craftable_item_id = craftable_item_link_urls.index(craftable_item_link_url)
-                    craftable_item_id_list.append(tuple([craftable_item_id, recipe_id]))
+            # Add not existent reagents
+            current_page_url = self.driver.current_url
+            not_existent_reagents.sort(key=lambda tup: tup[0])
+            for reagent in not_existent_reagents:
+                self.get_missing_reagent_details(reagent[0], reagent[1], reagent[2], vendor_names)
+
+            # Update reagent_link_urls
+            reagent_link_urls = []
+            reagents = self.read_psv('reagent')[1]
+            for reagent in reagents:
+                reagent_link_urls.append(reagent[1])
+            reagent_link_urls = tuple(reagent_link_urls)
+
+            # Return to index page
+            self.load_page(current_page_url)
 
             # Check if on last page
             if self.check_if_on_last_page(tab_id='tab-recipes'):
                 not_on_last_page = False
 
+    def get_missing_reagent_details(self, reagent_id, item_link_url, icon_link_url, vendor_names):
+
+        # load reagent page
+        self.load_page(item_link_url)
+
+        # Get reagent name and write to reagent psv file
+        reagent_name = self.driver.find_elements_by_class_name('heading-size-1')[0] \
+            .get_attribute('innerText')
+        self.write_psv_lines('reagent', tuple([(reagent_name,
+                                                item_link_url,
+                                                icon_link_url)]))
+
+        # Check if reagent is gathered
+        # Gathered, Disenchanting, Skinning, Fished
+        if self.check_if_tab_label_exists(item_link_url, '#gathered-from-object') or \
+                self.check_if_tab_label_exists(item_link_url, '#disenchanted-from') or \
+                self.check_if_tab_label_exists(item_link_url, '#skinned-from') or \
+                self.check_if_tab_label_exists(item_link_url, '#mined-from-object') or \
+                self.check_if_tab_label_exists(item_link_url, '#fished-in'):
+            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
+                                                               1)]))
+
+        # Check if reagent is dropped
+        if self.check_if_tab_label_exists(item_link_url, '#dropped_by'):
+            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
+                                                               2)]))
+
+        # Check if reagent is crafted
+        if self.check_if_tab_label_exists(item_link_url, '#created-by-spell'):
+            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
+                                                               3)]))
+
+        # Check if new reagent is sold by vendors
+        if self.check_if_tab_label_exists(item_link_url, '#sold-by'):
+            self.get_tab_label(item_link_url, '#sold-by').click()
+            vendor_rows = self.get_rows(tab_id='tab-sold-by')
+            for row in vendor_rows:
+                tds = self.get_row_data(row)
+                vendor_name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
+                vendor_id = vendor_names.index(vendor_name) + 1
+                buy_price = self.get_money_amount(tds[6])
+                self.write_psv_lines('reagent_has_vendor', tuple([(reagent_id,
+                                                                   vendor_id,
+                                                                   buy_price)]))
+            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
+                                                               4)]))
+
     def get_recipe_details(self):
 
         # Set standard values
-        current_recipe_id = 0
+        current_recipe_index = 0
         recipe_has_trainer_length = 0
         recipe_details_columns = tuple([('recipe_id',
                                          'training_cost',
@@ -1124,9 +1255,8 @@ class WowheadScraper:
 
             # Get current recipe id
             recipe_details = self.read_psv('temporary_recipe_details')[1]
-            current_recipe_id = len(recipe_details)
-            for recipe in recipe_details:
-                recipe_has_trainer_length += int(recipe[3])
+            current_recipe_index = len(recipe_details)
+            recipe_has_trainer_length = int(recipe_details[-1][3])
 
             # Reset recipe has trainers to previous recipe
             # Get all rows except the new ones
@@ -1147,10 +1277,10 @@ class WowheadScraper:
         # Get details for each recipe
         recipes = self.read_psv('recipe')[1]
 
-        for recipe in recipes[current_recipe_id:]:
+        for recipe in recipes[current_recipe_index:]:
 
             # Get recipe id
-            recipe_id = recipes.index(recipe)
+            recipe_id = recipes.index(recipe) + 1
 
             try:
                 recipe_has_trainer_length = int(self.get_single_recipe_details(recipe,
@@ -1159,13 +1289,13 @@ class WowheadScraper:
                                                                                recipe_has_trainer_columns))
             except ServerErrorException:
                 missing_details = open('data/missing_recipe_details.txt', 'a')
-                missing_details.write(str(recipes.index(recipe)) + '\n')
+                missing_details.write(str(recipes.index(recipe) + 1) + '\n')
                 missing_details.close()
                 continue
 
             # Print progress
             print('\rGot recipe {} of {}.'
-                  .format(recipe_id + 1, len(recipes)),
+                  .format(recipe_id, len(recipes)),
                   end='')
 
         # Print newline
@@ -1180,8 +1310,8 @@ class WowheadScraper:
         training_costs = tuple(training_costs)
         recipe_item_id_list = tuple(recipe_item_id_list)
         new_values = {
-            '9': training_costs,
-            '10': recipe_item_id_list
+            '10': training_costs,
+            '11': recipe_item_id_list
         }
 
         # Replace old with new values
@@ -1227,7 +1357,13 @@ class WowheadScraper:
         # Check if taught by item tab exists and click it
         recipe_item_id = None
         if self.check_if_tab_label_exists(recipe[6], '#taught-by-item'):
-            self.get_tab_label(recipe[6], '#taught-by-item').click()
+            bottom_advertisement_not_found = True
+            while bottom_advertisement_not_found:
+                try:
+                    self.get_tab_label(recipe[6], '#taught-by-item').click()
+                    bottom_advertisement_not_found = False
+                except ElementClickInterceptedException:
+                    self.remove_bottom_advertisement()
 
             # Get taught by item row data
             try:
@@ -1238,11 +1374,18 @@ class WowheadScraper:
 
         # Check if taught by npc tab exists and click it
         if self.check_if_tab_label_exists(recipe[6], '#taught-by-npc'):
-            self.get_tab_label(recipe[6], '#taught-by-npc').click()
+            bottom_advertisement_not_found = True
+            while bottom_advertisement_not_found:
+                try:
+                    self.get_tab_label(recipe[6], '#taught-by-npc').click()
+                    bottom_advertisement_not_found = False
+                except ElementClickInterceptedException:
+                    self.remove_bottom_advertisement()
 
             # Get taught by npc row data
             try:
-                recipe_has_trainer_length += int(self.get_recipe_details_taught_by_npc_row_data(recipe_id, trainer_names))
+                recipe_has_trainer_length += int(
+                    self.get_recipe_details_taught_by_npc_row_data(recipe_id, trainer_names))
             except StaleElementReferenceException:
 
                 # Reset recipe has trainers to previous recipe
@@ -1254,7 +1397,8 @@ class WowheadScraper:
                 self.write_psv_lines('recipe_has_trainer', old_rows)
 
                 # Try again
-                recipe_has_trainer_length += int(self.get_recipe_details_taught_by_npc_row_data(recipe_id, trainer_names))
+                recipe_has_trainer_length += int(
+                    self.get_recipe_details_taught_by_npc_row_data(recipe_id, trainer_names))
 
                 # Get expected row amount
                 if 'recipe_has_trainer' not in self.expected_row_amount.keys():
@@ -1285,9 +1429,9 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[2].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 if name in recipe_item_names:
-                    item_id = recipe_item_names.index(name)
+                    item_id = recipe_item_names.index(name) + 1
                     return item_id
 
             # Check if on last page
@@ -1310,9 +1454,9 @@ class WowheadScraper:
 
                 # Get row data
                 tds = self.get_row_data(row)
-                name = tds[1].find_element_by_tag_name('a').get_attribute('innerText')
+                name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 if name in trainer_names:
-                    trainer_id = trainer_names.index(name)
+                    trainer_id = trainer_names.index(name) + 1
                     trainer_amount += 1
 
                     # Write row to recipe has trainer psv file
@@ -1409,6 +1553,12 @@ class WowheadScraper:
         # Start new driver
         self.driver = self.start_driver()
 
+        # Maximise page
+        self.driver.maximize_window()
+
+        # Move cursor to the top left
+        self.move_cursor_to_top_left()
+
         # Get page
         self.driver.get(url)
 
@@ -1418,8 +1568,16 @@ class WowheadScraper:
         except ElementNotInteractableException:
             self.load_page(url)
 
+        # Try to remove bottom google advertisement
+        self.remove_bottom_advertisement()
+
         # Try to remove the video popup if possible
         self.remove_video()
+
+        # Move cursor to the left top
+        ActionChains(self.driver) \
+            .move_to_element(self.driver.find_element_by_tag_name('body')) \
+            .perform()
 
     def remove_cookie_notice(self):
 
@@ -1428,6 +1586,13 @@ class WowheadScraper:
             self.driver.find_element_by_id('as-oil-optout-confirm').find_elements_by_tag_name('button')[1].click()
         except NoSuchElementException:
             pass
+
+    def remove_bottom_advertisement(self):
+
+        bottom_footers = self.driver.find_elements_by_class_name('mobile-footer-closer')
+        if len(bottom_footers) > 0:
+            for footer in bottom_footers:
+                footer.click()
 
     def remove_video(self):
         try:
@@ -1457,6 +1622,8 @@ class WowheadScraper:
 
     def click_on_next(self, next_element):
 
+        self.move_cursor_to_top_left()
+        self.driver.execute_script('window.scrollTo(0,0)')
         next_element.click()
 
     def check_if_tab_label_exists(self, current_url, tab_label_anchor):
@@ -1640,7 +1807,7 @@ class WowheadScraper:
         old_rows = self.read_psv(filename)[1]
 
         # Replace standard with new values
-        current_row = 0
+        current_row = 1
         new_rows = []
         for row in old_rows:
             current_value = 0
@@ -1650,7 +1817,7 @@ class WowheadScraper:
                     new_value_found = False
                     new_values = new_values_dictionary[str(current_value)]
                     for new_value in new_values:
-                        if new_value[0] == str(current_row):
+                        if str(new_value[0]) == str(current_row):
                             new_row.append(str(new_value[1]))
                             new_value_found = True
                             break
@@ -1674,3 +1841,8 @@ class WowheadScraper:
         difference = round(end_time - start_time)
         print('It took: {} to load the {}.\n'.format(str(datetime.timedelta(seconds=difference)), data_name))
         return end_time
+
+    def move_cursor_to_top_left(self):
+        ActionChains(self.driver) \
+            .move_to_element(self.driver.find_element_by_tag_name('body')) \
+            .perform()
