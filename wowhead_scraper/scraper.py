@@ -43,7 +43,7 @@ class WowheadScraper:
         end_of_locations_time = self.print_loading_time(end_of_professions_time, 'locations')
 
         # Get vendors from index
-        # Link vendor_has_location
+        # Link vendor_location
         self.get_vendors()
         end_of_vendors_time = self.print_loading_time(end_of_locations_time, 'vendors')
 
@@ -51,7 +51,7 @@ class WowheadScraper:
         self.get_reagents()
         end_of_reagents_time = self.print_loading_time(end_of_vendors_time, 'reagents')
 
-        # Link reagent_has_vendor
+        # Link reagent_vendor
         self.get_reagent_details()
         end_of_reagents_details_time = self.print_loading_time(end_of_reagents_time, 'reagent details')
 
@@ -61,12 +61,12 @@ class WowheadScraper:
 
         # Get profession data for each profession
         # Including: trainers, recipes, and recipe items
-        # Link: recipe_has_reagent, and recipe_id on craftable items
+        # Link: recipe_reagent, and recipe_id on craftable items
         self.get_profession_data()
         end_of_profession_data_time = self.print_loading_time(end_of_craftable_items_time, 'profession data')
 
         # Get recipe details
-        # Link recipe_has_trainer, recipe item id
+        # Link recipe_trainer, recipe item id
         self.get_recipe_details()
         self.print_loading_time(end_of_profession_data_time, 'recipe details')
 
@@ -93,7 +93,7 @@ class WowheadScraper:
 
             # Else print the information
             else:
-                print('{} has the wrong amount of rows. The expected amount was: {}, but the actual amount was: {}.\n'
+                print('{} the wrong amount of rows. The expected amount was: {}, but the actual amount was: {}.\n'
                       .format(table, self.expected_row_amount[table], actual_row_amount))
 
         # Check if all tables have the correct row amount
@@ -278,10 +278,10 @@ class WowheadScraper:
                                  'reaction_to_horde')])
         self.create_psv('vendor', vendor_columns)
 
-        # Create vendor has location psv file
-        vendor_has_location_columns = tuple([('vendor_id',
+        # Create vendor location psv file
+        vendor_location_columns = tuple([('vendor_id',
                                               'location_id')])
-        self.create_psv('vendor_has_location', vendor_has_location_columns)
+        self.create_psv('vendor_location', vendor_location_columns)
 
         # Get location names
         location_names = []
@@ -308,7 +308,7 @@ class WowheadScraper:
 
             # Reset psv files
             self.create_psv('vendor', vendor_columns)
-            self.create_psv('vendor_has_location', vendor_has_location_columns)
+            self.create_psv('vendor_location', vendor_location_columns)
 
             # Try again
             self.get_vendors_row_data(location_names)
@@ -364,15 +364,15 @@ class WowheadScraper:
                         location_id = location_names.index(name) + 1
 
                         # Link vendors to locations
-                        self.write_psv_lines('vendor_has_location', tuple([(vendor_id,
+                        self.write_psv_lines('vendor_location', tuple([(vendor_id,
                                                                             location_id)]))
                 else:
                     pass
 
                 # Increase expected row amount
-                if 'vendor_has_location' not in self.expected_row_amount.keys():
-                    self.expected_row_amount['vendor_has_location'] = 0
-                self.expected_row_amount['vendor_has_location'] += len(vendor_locations)
+                if 'vendor_location' not in self.expected_row_amount.keys():
+                    self.expected_row_amount['vendor_location'] = 0
+                self.expected_row_amount['vendor_location'] += len(vendor_locations)
 
             # Check if on last page
             if self.check_if_on_last_page():
@@ -398,10 +398,10 @@ class WowheadScraper:
             tuple(['Bought'])])
         self.write_psv_lines('source', sources)
 
-        # Create reagent has source psv file
-        reagent_has_source = tuple([('reagent_id',
+        # Create reagent source psv file
+        reagent_source = tuple([('reagent_id',
                                      'source_id')])
-        self.create_psv('reagent_has_source', reagent_has_source)
+        self.create_psv('reagent_source', reagent_source)
 
         # Get location names
         location_names = []
@@ -473,12 +473,12 @@ class WowheadScraper:
                 try:
                     div_text = tds[8].find_element_by_tag_name('div').get_attribute('innerText')
                     if 'Vendor' in div_text or 'Vendors' in div_text:
-                        self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 4)]))
+                        self.write_psv_lines('reagent_source', tuple([(reagent_id, 4)]))
                     else:
                         if div_text in location_names:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 2)]))
                         if div_text in profession_names:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 3)]))
 
                 except NoSuchElementException:
                     try:
@@ -487,10 +487,10 @@ class WowheadScraper:
 
                         # Check exceptions
                         if div_link == 'Evergreen Herb Casing':
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 3)]))
 
                         if div_link == 'Anubisath Guardian':
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 2)]))
 
                     except NoSuchElementException:
                         name = (tds[2].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
@@ -500,9 +500,9 @@ class WowheadScraper:
                         if sources == '':
                             # Check exception
                             if name == 'Refined Deeprock Salt':
-                                self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
+                                self.write_psv_lines('reagent_source', tuple([(reagent_id, 3)]))
                             else:
-                                self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
+                                self.write_psv_lines('reagent_source', tuple([(reagent_id, 1)]))
 
                         # Check if source is gathered
                         if 'Gathered' in sources or \
@@ -510,19 +510,19 @@ class WowheadScraper:
                                 'Skinned' in sources or \
                                 'Mined' in sources or \
                                 'Fished' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 1)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 1)]))
 
                         # Check if source is dropped
                         if 'Drop' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 2)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 2)]))
 
                         # Check if source is crafted
                         if 'Crafted' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 3)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 3)]))
 
                         # Check if source is bought
                         if 'Vendor' in sources or 'Vendors' in sources:
-                            self.write_psv_lines('reagent_has_source', tuple([(reagent_id, 4)]))
+                            self.write_psv_lines('reagent_source', tuple([(reagent_id, 4)]))
 
             # Check if on last page
             if self.check_if_on_last_page():
@@ -530,16 +530,16 @@ class WowheadScraper:
 
     def get_reagent_details(self):
 
-        # Create reagent has vendor psv file
-        reagent_has_vendor_columns = tuple([('reagent_id',
+        # Create reagent vendor psv file
+        reagent_vendor_columns = tuple([('reagent_id',
                                              'vendor_id',
                                              'buy_price')])
-        self.create_psv('reagent_has_vendor', reagent_has_vendor_columns)
+        self.create_psv('reagent_vendor', reagent_vendor_columns)
 
         # Iterate through buyable reagents
-        reagent_has_vendor_length = 0
+        reagent_vendor_length = 0
         reagents = self.read_psv('reagent')[1]
-        reagent_has_source = self.read_psv('reagent_has_source')[1]
+        reagent_source = self.read_psv('reagent_source')[1]
         for reagent in reagents:
 
             # Get reagent_id
@@ -547,7 +547,7 @@ class WowheadScraper:
 
             print('\rGetting reagent {} of {}.'.format(reagent_id, len(reagents)), end='')
 
-            for row in reagent_has_source:
+            for row in reagent_source:
                 if reagent_id == int(row[0]) and int(row[1]) == 4:
 
                     # Load reagent details page
@@ -563,7 +563,6 @@ class WowheadScraper:
                             except ElementClickInterceptedException:
                                 self.remove_bottom_advertisement()
 
-
                         # Get vendor names
                         vendor_names = []
                         vendors = self.read_psv('vendor')[1]
@@ -576,24 +575,24 @@ class WowheadScraper:
                             self.get_reagent_details_sold_by_row_data(reagent_id, vendor_names)
                         except StaleElementReferenceException:
 
-                            # Reset reagent has vendors to previous reagent
+                            # Reset reagent vendors to previous reagent
                             # Get all rows except the new ones
-                            old_rows = self.read_psv('reagent_has_vendor')[1][reagent_has_vendor_length]
+                            old_rows = self.read_psv('reagent_vendor')[1][reagent_vendor_length]
 
                             # Reset file and write old lines
-                            self.create_psv('reagent_has_vendor', reagent_has_vendor_columns)
-                            self.write_psv_lines('reagent_has_vendor', old_rows)
+                            self.create_psv('reagent_vendor', reagent_vendor_columns)
+                            self.write_psv_lines('reagent_vendor', old_rows)
 
                             self.get_reagent_details_sold_by_row_data(reagent_id, vendor_names)
                         finally:
-                            reagent_has_vendor_length = len(self.read_psv('reagent_has_vendor')[1])
+                            reagent_vendor_length = len(self.read_psv('reagent_vendor')[1])
                     else:
                         pass
 
             # Get expected row amount
-            if 'reagent_has_vendor' not in self.expected_row_amount.keys():
-                self.expected_row_amount['reagent_has_vendor'] = 0
-            self.expected_row_amount['reagent_has_vendor'] += self.get_expected_row_amount()
+            if 'reagent_vendor' not in self.expected_row_amount.keys():
+                self.expected_row_amount['reagent_vendor'] = 0
+            self.expected_row_amount['reagent_vendor'] += self.get_expected_row_amount()
 
         # Print newline
         print('\n')
@@ -616,8 +615,8 @@ class WowheadScraper:
                 vendor_id = vendor_names.index(vendor_name) + 1
                 buy_price = self.get_money_amount(tds[6])
 
-                # Write line to reagent has vendor psv file
-                self.write_psv_lines('reagent_has_vendor', tuple([(reagent_id,
+                # Write line to reagent vendor psv file
+                self.write_psv_lines('reagent_vendor', tuple([(reagent_id,
                                                                    vendor_id,
                                                                    buy_price)]))
 
@@ -766,16 +765,16 @@ class WowheadScraper:
                                  'profession_id')])
         self.create_psv('recipe', recipe_columns)
 
-        # Create recipe has reagent psv file
-        recipe_has_reagent_columns = tuple([('recipe_id',
-                                             'reagent_id',
-                                             'amount')])
-        self.create_psv('recipe_has_reagent', recipe_has_reagent_columns)
+        # Create recipe reagent psv file
+        recipe_reagent_columns = tuple([('recipe_id',
+                                         'reagent_id',
+                                         'amount')])
+        self.create_psv('recipe_reagent', recipe_reagent_columns)
 
-        # Create trainer_has_profession
-        trainer_has_profession = tuple([('trainer_id',
-                                         'profession_id')])
-        self.create_psv('trainer_has_profession', trainer_has_profession)
+        # Create trainer profession psv file
+        trainer_profession = tuple([('trainer_id',
+                                     'profession_id')])
+        self.create_psv('trainer_profession', trainer_profession)
 
         # Get location names
         location_names = []
@@ -809,7 +808,7 @@ class WowheadScraper:
         trainer_length = 0
         recipe_item_length = 0
         recipe_length = 0
-        recipe_has_reagent_length = 0
+        recipe_reagent_length = 0
         trainers = []
         professions = self.read_psv('profession')[1]
         for profession in professions:
@@ -921,7 +920,7 @@ class WowheadScraper:
 
                 # Update lengths
                 recipe_length = len(self.read_psv('recipe')[1])
-                recipe_has_reagent_length = len(self.read_psv('recipe_has_reagent')[1])
+                recipe_reagent_length = len(self.read_psv('recipe_reagent')[1])
 
                 # Get expected row amount
                 if 'recipe' not in self.expected_row_amount.keys():
@@ -987,9 +986,9 @@ class WowheadScraper:
                         trainer_id = 1
                     trainers.append(tuple([trainer_id, name]))
 
-                # Write row to trainer has profession
-                self.write_psv_lines('trainer_has_profession', tuple([(trainer_id,
-                                                                       profession_id)]))
+                # Write row to trainer profession
+                self.write_psv_lines('trainer_profession', tuple([(trainer_id,
+                                                                   profession_id)]))
 
             # Check if on last page
             if self.check_if_on_last_page(tab_id='tab-trainers'):
@@ -1156,19 +1155,20 @@ class WowheadScraper:
                                 else:
                                     not_existent_reagents.sort(key=lambda tup: tup[0])
                                     reagent_id = not_existent_reagents[-1][0] + 1
-                                    not_existent_reagents.append(tuple([reagent_id, reagent_link_url, reagent_icon_link]))
+                                    not_existent_reagents.append(
+                                        tuple([reagent_id, reagent_link_url, reagent_icon_link]))
                         else:
                             not_existent_reagents.append(tuple([reagent_id, reagent_link_url, reagent_icon_link]))
 
-                    # Write row to recipe has reagent psv file
-                    self.write_psv_lines('recipe_has_reagent', tuple([(recipe_id,
-                                                                       reagent_id,
-                                                                       amount)]))
+                    # Write row to recipe reagent psv file
+                    self.write_psv_lines('recipe_reagent', tuple([(recipe_id,
+                                                                   reagent_id,
+                                                                   amount)]))
 
                 # Get expected row amount
-                if 'recipe_has_reagent' not in self.expected_row_amount.keys():
-                    self.expected_row_amount['recipe_has_reagent'] = 0
-                self.expected_row_amount['recipe_has_reagent'] += len(recipe_reagents)
+                if 'recipe_reagent' not in self.expected_row_amount.keys():
+                    self.expected_row_amount['recipe_reagent'] = 0
+                self.expected_row_amount['recipe_reagent'] += len(recipe_reagents)
 
             # Add not existent reagents
             current_page_url = self.driver.current_url
@@ -1209,18 +1209,18 @@ class WowheadScraper:
                 self.check_if_tab_label_exists(item_link_url, '#skinned-from') or \
                 self.check_if_tab_label_exists(item_link_url, '#mined-from-object') or \
                 self.check_if_tab_label_exists(item_link_url, '#fished-in'):
-            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
-                                                               1)]))
+            self.write_psv_lines('reagent_source', tuple([(reagent_id,
+                                                           1)]))
 
         # Check if reagent is dropped
         if self.check_if_tab_label_exists(item_link_url, '#dropped_by'):
-            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
-                                                               2)]))
+            self.write_psv_lines('reagent_source', tuple([(reagent_id,
+                                                           2)]))
 
         # Check if reagent is crafted
         if self.check_if_tab_label_exists(item_link_url, '#created-by-spell'):
-            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
-                                                               3)]))
+            self.write_psv_lines('reagent_source', tuple([(reagent_id,
+                                                           3)]))
 
         # Check if new reagent is sold by vendors
         if self.check_if_tab_label_exists(item_link_url, '#sold-by'):
@@ -1231,23 +1231,23 @@ class WowheadScraper:
                 vendor_name = (tds[1].find_element_by_tag_name('a').get_attribute('innerText')).replace("'", "''")
                 vendor_id = vendor_names.index(vendor_name) + 1
                 buy_price = self.get_money_amount(tds[6])
-                self.write_psv_lines('reagent_has_vendor', tuple([(reagent_id,
-                                                                   vendor_id,
-                                                                   buy_price)]))
-            self.write_psv_lines('reagent_has_source', tuple([(reagent_id,
-                                                               4)]))
+                self.write_psv_lines('reagent_vendor', tuple([(reagent_id,
+                                                               vendor_id,
+                                                               buy_price)]))
+            self.write_psv_lines('reagent_source', tuple([(reagent_id,
+                                                           4)]))
 
     def get_recipe_details(self):
 
         # Set standard values
         current_recipe_index = 0
-        recipe_has_trainer_length = 0
+        recipe_trainer_length = 0
         recipe_details_columns = tuple([('recipe_id',
                                          'training_cost',
                                          'recipe_item_id',
-                                         'recipe_has_trainer_length')])
-        recipe_has_trainer_columns = tuple([('recipe_id',
-                                             'trainer_id',)])
+                                         'recipe_trainer_length')])
+        recipe_trainer_columns = tuple([('recipe_id',
+                                         'trainer_id',)])
 
         # Check if temporary recipe details file exists
         temporary_recipe_details_exists = os.path.isfile('data/temporary_recipe_details.psv')
@@ -1256,23 +1256,23 @@ class WowheadScraper:
             # Get current recipe id
             recipe_details = self.read_psv('temporary_recipe_details')[1]
             current_recipe_index = len(recipe_details)
-            recipe_has_trainer_length = int(recipe_details[-1][3])
+            recipe_trainer_length = int(recipe_details[-1][3])
 
-            # Reset recipe has trainers to previous recipe
+            # Reset recipe trainers to previous recipe
             # Get all rows except the new ones
-            old_rows = self.read_psv('recipe_has_trainer')[1][0:recipe_has_trainer_length]
+            old_rows = self.read_psv('recipe_trainer')[1][0:recipe_trainer_length]
 
             # Reset file and write old lines
-            self.create_psv('recipe_has_trainer', recipe_has_trainer_columns)
-            self.write_psv_lines('recipe_has_trainer', old_rows)
+            self.create_psv('recipe_trainer', recipe_trainer_columns)
+            self.write_psv_lines('recipe_trainer', old_rows)
 
         else:
 
             # Create temporary recipe details psv file
             self.create_psv('temporary_recipe_details', recipe_details_columns)
 
-            # Create recipe has trainer psv file
-            self.create_psv('recipe_has_trainer', recipe_has_trainer_columns)
+            # Create recipe trainer psv file
+            self.create_psv('recipe_trainer', recipe_trainer_columns)
 
         # Get details for each recipe
         recipes = self.read_psv('recipe')[1]
@@ -1283,10 +1283,10 @@ class WowheadScraper:
             recipe_id = recipes.index(recipe) + 1
 
             try:
-                recipe_has_trainer_length = int(self.get_single_recipe_details(recipe,
-                                                                               recipe_id,
-                                                                               recipe_has_trainer_length,
-                                                                               recipe_has_trainer_columns))
+                recipe_trainer_length = int(self.get_single_recipe_details(recipe,
+                                                                           recipe_id,
+                                                                           recipe_trainer_length,
+                                                                           recipe_trainer_columns))
             except ServerErrorException:
                 missing_details = open('data/missing_recipe_details.txt', 'a')
                 missing_details.write(str(recipes.index(recipe) + 1) + '\n')
@@ -1323,8 +1323,8 @@ class WowheadScraper:
     def get_single_recipe_details(self,
                                   recipe,
                                   recipe_id,
-                                  recipe_has_trainer_length,
-                                  recipe_has_trainer_columns):
+                                  recipe_trainer_length,
+                                  recipe_trainer_columns):
 
         # Load recipe details page
         self.load_page(recipe[6])
@@ -1384,35 +1384,35 @@ class WowheadScraper:
 
             # Get taught by npc row data
             try:
-                recipe_has_trainer_length += int(
+                recipe_trainer_length += int(
                     self.get_recipe_details_taught_by_npc_row_data(recipe_id, trainer_names))
             except StaleElementReferenceException:
 
-                # Reset recipe has trainers to previous recipe
+                # Reset recipe trainers to previous recipe
                 # Get all rows except the new ones
-                old_rows = self.read_psv('recipe_has_trainer')[1][0:recipe_has_trainer_length]
+                old_rows = self.read_psv('recipe_trainer')[1][0:recipe_trainer_length]
 
                 # Reset file and write old lines
-                self.create_psv('recipe_has_trainer', recipe_has_trainer_columns)
-                self.write_psv_lines('recipe_has_trainer', old_rows)
+                self.create_psv('recipe_trainer', recipe_trainer_columns)
+                self.write_psv_lines('recipe_trainer', old_rows)
 
                 # Try again
-                recipe_has_trainer_length += int(
+                recipe_trainer_length += int(
                     self.get_recipe_details_taught_by_npc_row_data(recipe_id, trainer_names))
 
                 # Get expected row amount
-                if 'recipe_has_trainer' not in self.expected_row_amount.keys():
-                    self.expected_row_amount['recipe_has_trainer'] = 0
-                self.expected_row_amount['recipe_has_trainer'] += self.get_expected_row_amount(
+                if 'recipe_trainer' not in self.expected_row_amount.keys():
+                    self.expected_row_amount['recipe_trainer'] = 0
+                self.expected_row_amount['recipe_trainer'] += self.get_expected_row_amount(
                     tab_id='tab-taught-by-npc')
 
         # Add row to temporary recipe details file
         self.write_psv_lines('temporary_recipe_details', tuple([(recipe_id,
                                                                  training_cost,
                                                                  recipe_item_id,
-                                                                 recipe_has_trainer_length)]))
+                                                                 recipe_trainer_length)]))
 
-        return recipe_has_trainer_length
+        return recipe_trainer_length
 
     def get_recipe_details_taught_by_item_row_data(self, recipe_item_names):
 
@@ -1459,8 +1459,8 @@ class WowheadScraper:
                     trainer_id = trainer_names.index(name) + 1
                     trainer_amount += 1
 
-                    # Write row to recipe has trainer psv file
-                    self.write_psv_lines('recipe_has_trainer', tuple([(recipe_id,
+                    # Write row to recipe trainer psv file
+                    self.write_psv_lines('recipe_trainer', tuple([(recipe_id,
                                                                        trainer_id)]))
 
             # Check if on last page

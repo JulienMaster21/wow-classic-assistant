@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% use 'footer.html.twig' with footer as parent_footer %}
+
+{% block title %}Entity show page{% endblock title %}
+
+{% block content %}
+    <div class="container-fluid px-5">
+
+        {# Header #}
+        <h1 class="text-center">{{ name }}</h1>
+
+        {# Information #}
+        {% block information %}{% endblock information %}
+
+        {# CRUD operations #}
+        <div class="container-fluid mb-3 d-flex justify-content-center">
+            <a class="btn btn-primary" href="{{ indexRoute }}">
+                <div><i class="fas fa-list"></i> Back to index</div>
+            </a>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-primary mx-3" href="{{ editRoute }}">
+                    <div>
+                        <i class="fas fa-edit"></i> Edit
+                    </div>
+                </a>
+                <form action="{{ deleteRoute }}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button class="btn btn-danger" type="submit">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+
+    {# Footer #}
+    {% block footer %}
+        {{ block('parent_footer') }}
+    {% endblock footer %}
+
+{% endblock content %}

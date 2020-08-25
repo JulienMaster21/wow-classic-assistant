@@ -1,0 +1,57 @@
+{% extends 'entity/edit.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.trainerLinkUrl) }}
+        {{ form_row(form.reactionToAlliance) }}
+        {{ form_row(form.reactionToHorde) }}
+
+        {# Location #}
+        <div class="form-group">
+            {{ form_label(form.location) }}
+            {{ form_errors(form.location) }}
+            {{ form_help(form.location) }}
+            <div>
+                {{ form_widget(form.location) }}
+            </div>
+        </div>
+
+        {# Professions #}
+        <div class="form-group">
+            {{ form_label(form.professions) }}
+            {{ form_errors(form.professions) }}
+            {{ form_help(form.professions) }}
+            <ol>
+                {% for profession in form.professions %}
+                    <li>
+                        {{ form_widget(profession) }}
+                        {{ form_label(profession, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {# Recipes #}
+        <div class="form-group">
+            {{ form_label(form.recipes) }}
+            {{ form_errors(form.recipes) }}
+            {{ form_help(form.recipes) }}
+            {% for profession in form.recipes.vars.choices %}
+                <h6>{{ profession.label }}:</h6>
+                <ol>
+                    {% for choice in profession.choices %}
+                        <li>
+                            {{ form_widget(form.recipes[choice.value]) }}
+                            {{ form_label(form.recipes[choice.value], null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endfor %}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

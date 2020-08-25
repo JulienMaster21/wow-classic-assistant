@@ -1,0 +1,47 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ trainer.getName() }}{% endblock title %}
+
+{% block information %}
+    <a href="{{ trainer.getTrainerLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+    <p>Reaction to Alliance: {{ trainer.getReactionToAlliance() }}</p>
+    <p>Reaction to Horde: {{ trainer.getReactionToHorde() }}</p>
+    {% if trainer.getLocation() != null %}
+        <p>Location: {{ trainer.getLocation().getName() }}</p>
+    {% else %}
+        <p>{{ trainer.getName() }} has no known location.</p>
+    {% endif %}
+
+    {% if trainer.getProfessions()|length > 0 %}
+        <p>{{ trainer.getName() }} trains the following professions: </p>
+        <ol>
+            {% for profession in trainer.getProfessions() %}
+                <li>
+                    <a href="/professions/{{ profession.getId() }}">{{ profession.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ trainer.getName() }} trains no professions.</p>
+    {% endif %}
+
+    {% if trainer.getRecipes()|length > 0 %}
+        <p>{{ trainer.getName() }} trains the following recipes: </p>
+        <ol>
+            {% for profession, recipes in trainerRecipes %}
+                <li>
+                    <h6>{{ profession }}:</h6>
+                    <ol>
+                        {% for recipe in recipes %}
+                            <li>
+                                <a href="/recipes/{{ recipe.getId() }}">{{ recipe.getName() }}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ trainer.getName() }} can't train any recipes.</p>
+    {% endif %}
+{% endblock information %}

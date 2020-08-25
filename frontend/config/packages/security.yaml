@@ -1,0 +1,279 @@
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: lazy
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            logout:
+                path: logout
+                # where to redirect after logout
+                # target: app_any_route
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path: /
+                remember_me_parameter: '_remember_me'
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    # access_control:
+
+    role_hierarchy:
+        # Character permissions
+        ROLE_CHARACTER_READ:
+            - 'ROLE_CHARACTER_INDEX'
+            - 'ROLE_CHARACTER_SHOW'
+        ROLE_CHARACTER_ALL:
+            - 'ROLE_CHARACTER_INDEX'
+            - 'ROLE_CHARACTER_SHOW'
+            - 'ROLE_CHARACTER_CREATE'
+            - 'ROLE_CHARACTER_STORE'
+            - 'ROLE_CHARACTER_EDIT'
+            - 'ROLE_CHARACTER_UPDATE'
+            - 'ROLE_CHARACTER_DELETE'
+            - 'ROLE_CHARACTER_API_INDEX'
+            - 'ROLE_CHARACTER_API_SHOW'
+            - 'ROLE_CHARACTER_API_ROW'
+
+        # Craftable item permissions
+        ROLE_CRAFTABLE_ITEM_READ:
+            - 'ROLE_CRAFTABLE_ITEM_INDEX'
+            - 'ROLE_CRAFTABLE_ITEM_SHOW'
+        ROLE_CRAFTABLE_ITEM_ALL:
+            - 'ROLE_CRAFTABLE_ITEM_INDEX'
+            - 'ROLE_CRAFTABLE_ITEM_SHOW'
+            - 'ROLE_CRAFTABLE_ITEM_CREATE'
+            - 'ROLE_CRAFTABLE_ITEM_STORE'
+            - 'ROLE_CRAFTABLE_ITEM_EDIT'
+            - 'ROLE_CRAFTABLE_ITEM_UPDATE'
+            - 'ROLE_CRAFTABLE_ITEM_DELETE'
+            - 'ROLE_CRAFTABLE_ITEM_API_INDEX'
+            - 'ROLE_CRAFTABLE_ITEM_API_SHOW'
+            - 'ROLE_CRAFTABLE_ITEM_API_ROW'
+
+        # Faction permissions
+        ROLE_FACTION_READ:
+            - 'ROLE_FACTION_INDEX'
+            - 'ROLE_FACTION_SHOW'
+        ROLE_FACTION_ALL:
+            - 'ROLE_FACTION_INDEX'
+            - 'ROLE_FACTION_SHOW'
+            - 'ROLE_FACTION_CREATE'
+            - 'ROLE_FACTION_STORE'
+            - 'ROLE_FACTION_EDIT'
+            - 'ROLE_FACTION_UPDATE'
+            - 'ROLE_FACTION_DELETE'
+            - 'ROLE_FACTION_API_INDEX'
+            - 'ROLE_FACTION_API_SHOW'
+            - 'ROLE_FACTION_API_ROW'
+
+        # Location permissions
+        ROLE_LOCATION_READ:
+            - 'ROLE_LOCATION_INDEX'
+            - 'ROLE_LOCATION_SHOW'
+        ROLE_LOCATION_ALL:
+            - 'ROLE_LOCATION_INDEX'
+            - 'ROLE_LOCATION_SHOW'
+            - 'ROLE_LOCATION_CREATE'
+            - 'ROLE_LOCATION_STORE'
+            - 'ROLE_LOCATION_EDIT'
+            - 'ROLE_LOCATION_UPDATE'
+            - 'ROLE_LOCATION_DELETE'
+            - 'ROLE_LOCATION_API_INDEX'
+            - 'ROLE_LOCATION_API_SHOW'
+            - 'ROLE_LOCATION_API_ROW'
+
+        # Playable class permissions
+        ROLE_PLAYABLE_CLASS_READ:
+            - 'ROLE_PLAYABLE_CLASS_INDEX'
+            - 'ROLE_PLAYABLE_CLASS_SHOW'
+        ROLE_PLAYABLE_CLASS_ALL:
+            - 'ROLE_PLAYABLE_CLASS_INDEX'
+            - 'ROLE_PLAYABLE_CLASS_SHOW'
+            - 'ROLE_PLAYABLE_CLASS_CREATE'
+            - 'ROLE_PLAYABLE_CLASS_STORE'
+            - 'ROLE_PLAYABLE_CLASS_EDIT'
+            - 'ROLE_PLAYABLE_CLASS_UPDATE'
+            - 'ROLE_PLAYABLE_CLASS_DELETE'
+            - 'ROLE_PLAYABLE_CLASS_API_INDEX'
+            - 'ROLE_PLAYABLE_CLASS_API_SHOW'
+            - 'ROLE_PLAYABLE_CLASS_API_ROW'
+
+        # profession permissions
+        ROLE_PROFESSION_READ:
+            - 'ROLE_PROFESSION_INDEX'
+            - 'ROLE_PROFESSION_SHOW'
+        ROLE_PROFESSION_ALL:
+            - 'ROLE_PROFESSION_INDEX'
+            - 'ROLE_PROFESSION_SHOW'
+            - 'ROLE_PROFESSION_CREATE'
+            - 'ROLE_PROFESSION_STORE'
+            - 'ROLE_PROFESSION_EDIT'
+            - 'ROLE_PROFESSION_UPDATE'
+            - 'ROLE_PROFESSION_DELETE'
+            - 'ROLE_PROFESSION_API_INDEX'
+            - 'ROLE_PROFESSION_API_SHOW'
+            - 'ROLE_PROFESSION_API_ROW'
+
+        # Reagent permissions
+        ROLE_REAGENT_READ:
+            - 'ROLE_REAGENT_INDEX'
+            - 'ROLE_REAGENT_SHOW'
+        ROLE_REAGENT_ALL:
+            - 'ROLE_REAGENT_INDEX'
+            - 'ROLE_REAGENT_SHOW'
+            - 'ROLE_REAGENT_CREATE'
+            - 'ROLE_REAGENT_STORE'
+            - 'ROLE_REAGENT_EDIT'
+            - 'ROLE_REAGENT_UPDATE'
+            - 'ROLE_REAGENT_DELETE'
+            - 'ROLE_REAGENT_API_INDEX'
+            - 'ROLE_REAGENT_API_SHOW'
+            - 'ROLE_REAGENT_API_ROW'
+
+        # Recipe permissions
+        ROLE_RECIPE_READ:
+            - 'ROLE_RECIPE_INDEX'
+            - 'ROLE_RECIPE_SHOW'
+        ROLE_RECIPE_ALL:
+            - 'ROLE_RECIPE_INDEX'
+            - 'ROLE_RECIPE_SHOW'
+            - 'ROLE_RECIPE_CREATE'
+            - 'ROLE_RECIPE_STORE'
+            - 'ROLE_RECIPE_EDIT'
+            - 'ROLE_RECIPE_UPDATE'
+            - 'ROLE_RECIPE_DELETE'
+            - 'ROLE_RECIPE_API_INDEX'
+            - 'ROLE_RECIPE_API_SHOW'
+            - 'ROLE_RECIPE_API_ROW'
+
+        # Recipe item permissions
+        ROLE_RECIPE_ITEM_READ:
+            - 'ROLE_RECIPE_ITEM_INDEX'
+            - 'ROLE_RECIPE_ITEM_SHOW'
+        ROLE_RECIPE_ITEM_ALL:
+            - 'ROLE_RECIPE_ITEM_INDEX'
+            - 'ROLE_RECIPE_ITEM_SHOW'
+            - 'ROLE_RECIPE_ITEM_CREATE'
+            - 'ROLE_RECIPE_ITEM_STORE'
+            - 'ROLE_RECIPE_ITEM_EDIT'
+            - 'ROLE_RECIPE_ITEM_UPDATE'
+            - 'ROLE_RECIPE_ITEM_DELETE'
+            - 'ROLE_RECIPE_ITEM_API_INDEX'
+            - 'ROLE_RECIPE_ITEM_API_SHOW'
+            - 'ROLE_RECIPE_ITEM_API_ROW'
+
+        # Source permissions
+        ROLE_SOURCE_READ:
+            - 'ROLE_SOURCE_INDEX'
+            - 'ROLE_SOURCE_SHOW'
+        ROLE_SOURCE_ALL:
+            - 'ROLE_SOURCE_INDEX'
+            - 'ROLE_SOURCE_SHOW'
+            - 'ROLE_SOURCE_CREATE'
+            - 'ROLE_SOURCE_STORE'
+            - 'ROLE_SOURCE_EDIT'
+            - 'ROLE_SOURCE_UPDATE'
+            - 'ROLE_SOURCE_DELETE'
+            - 'ROLE_SOURCE_API_INDEX'
+            - 'ROLE_SOURCE_API_SHOW'
+            - 'ROLE_SOURCE_API_ROW'
+
+        # Trainer permissions
+        ROLE_TRAINER_READ:
+            - 'ROLE_TRAINER_INDEX'
+            - 'ROLE_TRAINER_SHOW'
+        ROLE_TRAINER_ALL:
+            - 'ROLE_TRAINER_INDEX'
+            - 'ROLE_TRAINER_SHOW'
+            - 'ROLE_TRAINER_CREATE'
+            - 'ROLE_TRAINER_STORE'
+            - 'ROLE_TRAINER_EDIT'
+            - 'ROLE_TRAINER_UPDATE'
+            - 'ROLE_TRAINER_DELETE'
+            - 'ROLE_TRAINER_API_INDEX'
+            - 'ROLE_TRAINER_API_SHOW'
+            - 'ROLE_TRAINER_API_ROW'
+
+        # User permissions
+        ROLE_USER_READ:
+            - 'ROLE_USER_INDEX'
+            - 'ROLE_USER_SHOW'
+        ROLE_USER_ALL:
+            - 'ROLE_USER_INDEX'
+            - 'ROLE_USER_SHOW'
+            - 'ROLE_USER_CREATE'
+            - 'ROLE_USER_STORE'
+            - 'ROLE_USER_EDIT'
+            - 'ROLE_USER_UPDATE'
+            - 'ROLE_USER_DELETE'
+            - 'ROLE_USER_API_INDEX'
+            - 'ROLE_USER_API_SHOW'
+            - 'ROLE_USER_API_ROW'
+
+        # Vendor permissions
+        ROLE_VENDOR_READ:
+            - 'ROLE_VENDOR_INDEX'
+            - 'ROLE_VENDOR_SHOW'
+        ROLE_VENDOR_ALL:
+            - 'ROLE_VENDOR_INDEX'
+            - 'ROLE_VENDOR_SHOW'
+            - 'ROLE_VENDOR_CREATE'
+            - 'ROLE_VENDOR_STORE'
+            - 'ROLE_VENDOR_EDIT'
+            - 'ROLE_VENDOR_UPDATE'
+            - 'ROLE_VENDOR_DELETE'
+            - 'ROLE_VENDOR_API_INDEX'
+            - 'ROLE_VENDOR_API_SHOW'
+            - 'ROLE_VENDOR_API_ROW'
+
+        # Available User roles
+        ROLE_USER:
+            - 'ROLE_CRAFTABLE_ITEM_READ'
+            - 'ROLE_FACTION_READ'
+            - 'ROLE_PLAYABLE_CLASS_READ'
+            - 'ROLE_LOCATION_READ'
+            - 'ROLE_PROFESSION_READ'
+            - 'ROLE_REAGENT_READ'
+            - 'ROLE_RECIPE_READ'
+            - 'ROLE_RECIPE_ITEM_READ'
+            - 'ROLE_SOURCE_READ'
+            - 'ROLE_TRAINER_READ'
+            - 'ROLE_VENDOR_READ'
+        ROLE_ADMIN:
+            - 'ROLE_USER'
+            - 'ROLE_CHARACTER_ALL'
+            - 'ROLE_CRAFTABLE_ITEM_ALL'
+            - 'ROLE_FACTION_ALL'
+            - 'ROLE_PLAYABLE_CLASS_ALL'
+            - 'ROLE_LOCATION_ALL'
+            - 'ROLE_PROFESSION_ALL'
+            - 'ROLE_REAGENT_ALL'
+            - 'ROLE_RECIPE_ALL'
+            - 'ROLE_RECIPE_ITEM_ALL'
+            - 'ROLE_SOURCE_ALL'
+            - 'ROLE_TRAINER_ALL'
+            - 'ROLE_USER_ALL'
+            - 'ROLE_VENDOR_ALL'

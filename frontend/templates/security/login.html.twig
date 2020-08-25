@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+    <h3 class="my-3 text-center">Login to your account</h3>
+
+    {% if app.user %}
+        <div class="container-fluid mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('logout') }}">Logout</a>
+        </div>
+    {% endif %}
+
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.username) }}
+        {{ form_row(form.password) }}
+
+        <div class="form-group form-check">
+            <input id="remember_me" name="_remember_me" class="form-check-input" type="checkbox" value="1">
+            <label for="remember_me" class="form-check-label">Remember me</label>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+
+    <div class="container-fluid text-center mb-3">
+        <a href="/database">
+            <div class="btn btn-primary">
+                <i class="fas fa-home"></i> Back to home
+            </div>
+        </a>
+    </div>
+    <div class="container-fluid text-center">
+        <a href="/register">Don't have an account? Register here.</a>
+    </div>
+{% endblock content %}

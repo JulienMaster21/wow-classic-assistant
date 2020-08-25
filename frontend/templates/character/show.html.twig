@@ -1,0 +1,42 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ character.getName() }}{% endblock title %}
+
+{% block information %}
+    <p>Owner: {{ character.getUser().getUsername() }}</p>
+    <p>Faction: {{ character.getFaction().getName() }}</p>
+    <p>Class: {{ character.getPlayableClass().getName() }}</p>
+
+    {% if character.getProfessions|length > 0 %}
+        <p>{{ character.getName() }} has the following professions: </p>
+        <ul>
+            {% for profession in character.getProfessions() %}
+                <li>
+                    <a href="/professions/{{ profession.getId() }}">{{ profession.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ character.getName() }} has no professions.</p>
+    {% endif %}
+
+    {% if character.getRecipes()|length > 0 %}
+        <p>{{ character.getName() }} knows the following recipes: </p>
+        <ol>
+            {% for profession, recipes in characterRecipes %}
+                <li>
+                    <h6>{{ profession }}:</h6>
+                    <ol>
+                        {% for recipe in recipes %}
+                            <li>
+                                <a href="/recipes/{{ recipe.getId() }}">{{ recipe.getName() }}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ character.getName() }} doesn't know any recipes.</p>
+    {% endif %}
+{% endblock information %}

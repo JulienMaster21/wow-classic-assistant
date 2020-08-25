@@ -1,0 +1,173 @@
+@import "~bootstrap/scss/bootstrap";
+
+// Background colours
+$base-background-color: #FFFFFF;
+$contrast-background-color: #000000;
+$highlight-background-color: #00FF00;
+
+// Text colours
+$base-text-color: #000000;
+$contrast-text-color: #FFFFFF;
+$highlight-text-color: #0056B3;
+
+// Flash colours
+$error-color: #FF0000;
+$success-color: #00FF00;
+
+// Difficulty colours
+$category1-color: #FF8040;
+$category2-color: #FFFF00;
+$category3-color: #40BF40;
+$category4-color: #808080;
+
+// Fonts
+$standard-font: sans-serif;
+
+* {
+    box-sizing: border-box;
+}
+
+nav {
+    border-bottom: solid 2px $base-text-color;
+
+    ul {
+        list-style: none;
+        margin: 0;
+
+        li {
+            background-color: $base-background-color;
+
+            :not(.dropdown-menu) {
+
+                &:hover, &:focus {
+                    background-color: $highlight-background-color;
+
+                    i {
+                        transition-delay: 2s;
+                    }
+
+                    div {
+                        transition-delay: 2s;
+                    }
+
+                    .dropdown-menu-right {
+                        transition-delay: 0s;
+                    }
+
+                    h3 {
+                        transition-delay: 2s;
+                    }
+                }
+            }
+
+            .dropdown {
+
+                [aria-expanded = "true"] {
+
+                    background-color: $highlight-background-color;
+                }
+
+                & {
+                    border-radius: .25rem;
+                }
+            }
+
+            a.active {
+
+                & {
+                    cursor: default;
+                    background-color: $highlight-background-color;
+                }
+            }
+
+            a {
+                color: $base-text-color !important;
+                text-decoration: none !important;
+                padding: 1em !important;
+                transition: background-color 1s;
+            }
+
+            button {
+                transition: background-color 1s !important;
+            }
+        }
+    }
+}
+
+.controls {
+
+    span {
+        color: $base-text-color;
+        cursor: pointer;
+    }
+
+    span:hover {
+        color: $highlight-text-color;
+    }
+}
+
+.contrast {
+    color: $contrast-text-color;
+    background-color: $contrast-background-color;
+}
+
+.money {
+    padding-right: 15px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.money-gold {
+    background-image: url("../images/money_gold.gif");
+}
+
+.money-silver {
+    background-image: url("../images/money_silver.gif");
+}
+
+.money-copper {
+    background-image: url("../images/money_copper.gif");
+}
+
+.difficulty-category-1 {
+    color: $category1-color;
+}
+
+.difficulty-category-2 {
+    color: $category2-color;
+}
+
+.difficulty-category-3 {
+    color: $category3-color;
+}
+
+.difficulty-category-4 {
+    color: $category4-color;
+}
+
+p.error {
+    font-weight: bold;
+    color: $error-color;
+}
+
+input.error {
+    border: solid 2px $error-color;
+}
+
+input.success {
+    border: solid 2px $success-color;
+}
+
+.ul-without-icon {
+    list-style: none;
+}
+
+.row {
+    margin: 0;
+}
+
+.col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+.col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+.col-sm-4, .col-sm-8, .col-md-4, .col-md-8, .col-lg-4, .col-lg-8 {
+    padding: 0;
+}

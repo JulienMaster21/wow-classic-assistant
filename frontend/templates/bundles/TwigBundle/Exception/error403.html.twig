@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Forbidden
+{% endblock title %}
+
+{% block content %}
+    <h1 class="text-center"><i class="fas fa-lock"></i> 403 Error</h1>
+
+<div class="container-fluid px-5">
+    <p>Sorry, you tried to access a page without the proper permissions.</p>
+    <p>If this is incorrect, please <a href="/contact">contact us</a>.</p>
+    <p>Go <a href="/">back to home</a>?</p>
+</div>
+{% endblock content %}

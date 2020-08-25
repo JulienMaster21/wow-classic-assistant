@@ -1,0 +1,43 @@
+{% extends 'entity/edit.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+
+        {# Roles #}
+        <div class="form-group">
+            {{ form_label(form.roles) }}
+            {{ form_errors(form.roles) }}
+            {{ form_help(form.roles) }}
+            <ul class="ul-without-icon">
+                {% for role in form.roles %}
+                    <li>
+                        {{ form_widget(role) }}
+                        {{ form_label(role, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {# Characters #}
+        <div class="form-group">
+            {{ form_label(form.characters) }}
+            {{ form_errors(form.characters) }}
+            {{ form_help(form.characters) }}
+            <ul class="ul-without-icon">
+                {% for character in form.characters %}
+                    <li>
+                        {{ form_widget(character) }}
+                        {{ form_label(character, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

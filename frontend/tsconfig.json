@@ -1,0 +1,4 @@
+{
+    "include": ["assets/js/**.ts"],
+    "exclude": ["node_modules"]
+}

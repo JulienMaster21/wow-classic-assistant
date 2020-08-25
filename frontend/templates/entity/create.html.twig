@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Create {{ className }}
+{% endblock title %}
+
+{% block content %}
+    <h3 class="my-3 text-center">Create {{ className }}</h3>
+
+    <div class="container-fluid px-5 mb-3">
+        <ul>
+            {% for error in errors %}
+                <div class="w-75 mx-auto mt-3 alert alert-danger d-flex justify-content-between">
+                    <span>{{ error.message }}</span>
+                    <button type="button" style="border: none; background: none;" class="text-right" onclick="window.app.removeFlashMessage(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% block form %}{% endblock form %}
+
+    <div class="container-fluid text-center mb-3">
+        <a href="{{ indexRoute }}">
+            <div class="btn btn-primary">
+                <i class="fas fa-list"></i> Back to index
+            </div>
+        </a>
+    </div>
+{% endblock content %}

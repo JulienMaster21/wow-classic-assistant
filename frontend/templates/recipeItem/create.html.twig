@@ -1,0 +1,24 @@
+{% extends 'entity/create.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.itemLinkUrl) }}
+        {{ form_row(form.iconLinkUrl) }}
+        {{ form_row(form.requiredSkillLevel) }}
+
+        {# Profession #}
+        <div class="form-group">
+            {{ form_label(form.profession) }}
+            {{ form_errors(form.profession) }}
+            {{ form_help(form.profession) }}
+            <div>
+                {{ form_widget(form.profession) }}
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

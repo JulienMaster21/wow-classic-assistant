@@ -1,0 +1,29 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ user.getUsername() }}{% endblock title %}
+
+{% block information %}
+    <p>Email: {{ user.getEmail() }}</p>
+    <p>{{ user.getUsername() }} has the following roles: </p>
+
+    <ul>
+        {% for role in user.getRoles() %}
+            <li>
+                {{ role[5:]|capitalize }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if user.getCharacters()|length > 0 %}
+        <p>{{ user.getUsername() }} has the following characters: </p>
+        <ul>
+            {% for character in user.getCharacters() %}
+                <li>
+                    <a href="/characters/{{ character.getId() }}">{{ character.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ user.getUsername() }} does not have any characters.</p>
+    {% endif %}
+{% endblock information %}

@@ -1,0 +1,74 @@
+{% extends 'entity/edit.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.professionLinkUrl) }}
+        {{ form_row(form.iconLinkUrl) }}
+        {{ form_row(form.isMainProfession) }}
+
+        {# Trainers #}
+        <div class="form-group">
+            {{ form_label(form.trainers) }}
+            {{ form_errors(form.trainers) }}
+            {{ form_help(form.trainers) }}
+            <ol>
+                {% for trainer in form.trainers %}
+                    <li>
+                        {{ form_widget(trainer) }}
+                        {{ form_label(trainer, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {# Recipe items #}
+        <div class="form-group">
+            {{ form_label(form.recipeItems) }}
+            {{ form_errors(form.recipeItems) }}
+            {{ form_help(form.recipeItems) }}
+            <ol>
+                {% for recipeItem in form.recipeItems %}
+                    <li>
+                        {{ form_widget(recipeItem) }}
+                        {{ form_label(recipeItem, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {# Characters #}
+        <div class="form-group">
+            {{ form_label(form.characters) }}
+            {{ form_errors(form.characters) }}
+            {{ form_help(form.characters) }}
+            <ul>
+                {% for character in form.characters %}
+                    <li>
+                        {{ form_widget(character) }}
+                        {{ form_label(character, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {# Recipes #}
+        <div class="form-group">
+            {{ form_label(form.recipes) }}
+            {{ form_errors(form.recipes) }}
+            {{ form_help(form.recipes) }}
+            <ol>
+                {% for recipe in form.recipes %}
+                    <li>
+                        {{ form_widget(recipe) }}
+                        {{ form_label(recipe, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

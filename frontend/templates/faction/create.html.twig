@@ -1,0 +1,26 @@
+{% extends 'entity/create.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+
+        {# Characters #}
+        <div class="form-group">
+            {{ form_label(form.characters) }}
+            {{ form_errors(form.characters) }}
+            {{ form_help(form.characters) }}
+            <ul>
+                {% for character in form.characters %}
+                    <li>
+                        {{ form_widget(character) }}
+                        {{ form_label(character, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% use 'footer.html.twig' with footer as parent_footer %}
+
+{# Title #}
+{% block title %}
+    {{ title }}
+{% endblock title %}
+
+{# Content #}
+{% block content %}
+
+    {# Table #}
+    <table class="table table-striped table-responsive-md table-hover">
+        <thead>
+            <tr>
+            {% for column in columns %}
+                <th>{{ column }}</th>
+            {% endfor %}
+            </tr>
+        </thead>
+        <caption class="text-center">Loading, please wait.</caption>
+        <tbody>
+        </tbody>
+    </table>
+
+    {# navigation #}
+    <div class="container text-center mb-2 controls">
+        <span id="controlsToFirst" class="mx-2">
+            <i class="fas fa-chevron-left"></i>
+            <i class="fas fa-chevron-left"></i>
+        </span>
+        <span id="controlsToPrevious" class="mx-2">
+            <i class="fas fa-chevron-left"></i>
+        </span>
+        <select id="pageSelect" class="mx-2"></select>
+        <span id="controlsToNext" class="mx-2">
+            <i class="fas fa-chevron-right"></i>
+        </span>
+        <span id="controlsToLast" class="mx-2">
+            <i class="fas fa-chevron-right"></i>
+            <i class="fas fa-chevron-right"></i>
+        </span>
+    </div>
+    <div class="container-fluid text-center mb-3">
+        <label for="entityRange">Amount of rows per page:</label>
+        <select class="mx-2 select" id="entityRange" name="entityRange">
+            <option id="entityFilter5" value="5">5</option>
+            <option id="entityFilter10" selected value="10">10</option>
+        </select>
+    </div>
+
+    {# CRUD Operations #}
+    <div class="container-fluid mb-3 text-center">
+        <a href="/database">
+            <div class="btn btn-primary">
+                <i class="fas fa-list"></i> Back to index
+            </div>
+        </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ createRoute }}" class="ml-3">
+                <div class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add
+                </div>
+            </a>
+        {% endif %}
+    </div>
+
+    {# Footer #}
+    {% block footer %}
+        {{ block('parent_footer') }}
+    {% endblock footer %}
+
+{% endblock content %}
+
+{# Scripts #}
+{% block scriptEntries %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('index') }}
+{% endblock %}

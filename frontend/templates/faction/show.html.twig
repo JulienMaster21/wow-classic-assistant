@@ -1,0 +1,18 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ faction.getName() }}{% endblock title %}
+
+{% block information %}
+    {% if faction.getCharacters()|length > 0 %}
+        <p>The following characters belong to the {{ faction.getName() }}: </p>
+        <ul>
+            {% for character in faction.getCharacters() %}
+                <li>
+                    <a href="/characters/{{ character.getId() }}">{{ character.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No characters belong to the {{ faction.getName() }}.</p>
+    {% endif %}
+{% endblock information %}

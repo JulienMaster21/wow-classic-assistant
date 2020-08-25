@@ -1,0 +1,15 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ recipeItem.getName() }}{% endblock title %}
+
+{% block information %}
+    <p>Icon:
+        <img src="{{ recipeItem.getIconLinkUrl|replace({'small': 'medium', 'large': 'medium'}) }}"
+             alt="An icon representing the {{ recipeItem.getName() }} recipe item">
+    </p>
+    <a href="{{ recipeItem.getItemLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+    <p>Required skill level: {{ recipeItem.getRequiredSkillLevel() }}</p>
+    <p>Profession:
+        <a href="/professions/{{ recipeItem.getProfession.getId() }}">{{ recipeItem.getProfession().getName() }}</a>
+    </p>
+{% endblock information %}

@@ -1,0 +1,26 @@
+{% block messages %}
+    {% for message in messages.error %}
+        <div class="w-75 mx-auto mt-3 alert alert-danger d-flex justify-content-between">
+            <span>{{ message|raw }}</span>
+            <button type="button" style="border: none; background: none;" class="text-right" onclick="window.app.removeFlashMessage(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    {% endfor %}
+    {% for message in messages.warning %}
+        <div class="w-75 mx-auto mt-3 alert alert-warning d-flex justify-content-between">
+            <span>{{ message|raw }}</span>
+            <button type="button" style="border: none; background: none;" class="text-right" onclick="window.app.removeFlashMessage(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    {% endfor %}
+    {% for message in messages.success %}
+        <div class="w-75 mx-auto mt-3 alert alert-success d-flex justify-content-between">
+            <span>{{ message|raw }}</span>
+            <button type="button" style="border: none; background: none;" class="text-right" onclick="window.app.removeFlashMessage(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    {% endfor %}
+{% endblock messages %}

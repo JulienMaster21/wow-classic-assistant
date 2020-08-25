@@ -1,0 +1,18 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ source.getName() }}{% endblock title %}
+
+{% block information %}
+    {% if source.getReagents()|length > 0 %}
+        <p>The following reagents are {{ source.getName() }}: </p>
+        <ol>
+            {% for reagent in source.getReagents() %}
+                <li>
+                    <a href="/reagents/{{ reagent.getId() }}">{{ reagent.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>No reagents are {{ source.getName() }}.</p>
+    {% endif %}
+{% endblock information %}

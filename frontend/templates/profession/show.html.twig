@@ -1,0 +1,64 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ profession.getName() }}{% endblock title %}
+
+{% block information %}
+    <p>Icon:
+        <img src="{{ profession.getIconLinkUrl|replace({'small': 'medium', 'large': 'medium'}) }}"
+             alt="An icon representing the {{ profession.getName() }} profession">
+    </p>
+    <a href="{{ profession.getProfessionLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+    <p>Main profession: {{ profession.getIsMainProfession() ? 'Yes' : 'No' }}</p>
+
+    {% if profession.getTrainers()|length > 0 %}
+        <p>{{ profession.getName() }} is taught by the following trainers: </p>
+        <ol>
+            {% for trainer in profession.getTrainers() %}
+                <li>
+                    <a href="/trainers/{{ trainer.getId() }}">{{ trainer.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ profession.getName() }} doesn't have any trainers.</p>
+    {% endif %}
+
+    {% if profession.getRecipes()|length > 0 %}
+        <p>{{ profession.getName() }} has the following recipes: </p>
+        <ol>
+            {% for recipe in profession.getRecipes() %}
+                <li>
+                    <a href="/recipes/{{ recipe.getId() }}">{{ recipe.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ profession.getName() }} doesn't have any recipes.</p>
+    {% endif %}
+
+    {% if profession.getRecipeItems()|length > 0 %}
+        <p>{{ profession.getName() }} has the following recipe items: </p>
+        <ol>
+            {% for recipeItem in profession.getRecipeItems() %}
+                <li>
+                    <a href="/recipe-items/{{ recipeItem.getId() }}">{{ recipeItem.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ profession.getName() }} doesn't have any recipe items.</p>
+    {% endif %}
+
+    {% if profession.getCharacters()|length > 0 %}
+        <p>The following characters know {{ profession.getName() }}: </p>
+        <ul>
+            {% for character in profession.getCharacters() %}
+                <li>
+                    <a href="/characters/{{ character.getId() }}">{{ character.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No characters know {{ profession.getName() }}.</p>
+    {% endif %}
+{% endblock information %}

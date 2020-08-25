@@ -1,0 +1,26 @@
+{% extends 'entity/edit.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+
+        {# Reagents #}
+        <div class="form-group">
+            {{ form_label(form.reagents) }}
+            {{ form_errors(form.reagents) }}
+            {{ form_help(form.reagents) }}
+            <ol>
+                {% for reagent in form.reagents %}
+                    <li>
+                        {{ form_widget(reagent) }}
+                        {{ form_label(reagent, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

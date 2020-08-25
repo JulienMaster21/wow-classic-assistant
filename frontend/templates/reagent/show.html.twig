@@ -1,0 +1,60 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ reagent.getName() }}{% endblock title %}
+
+{% block information %}
+    <p>Icon:
+        <img src="{{ reagent.getIconLinkUrl|replace({'small': 'medium', 'large': 'medium'}) }}"
+             alt="An icon representing the {{ reagent.getName() }} reagent">
+    </p>
+    <a href="{{ reagent.getItemLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+
+    {# Sources #}
+    {% if reagent.getSources()|length > 0 %}
+        <p>{{ reagent.getName() }} can be collected using the following sources: </p>
+        <ul>
+            {% for source in reagent.getSources() %}
+                <li>
+                    <a href="/sources/{{ source.getId() }}">{{ source.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ reagent.getName() }} doesn't have any sources.</p>
+    {% endif %}
+
+    {# Vendors #}
+    {% if reagent.getVendors()|length > 0 %}
+        <p>{{ reagent.getName() }} is sold by the following vendors: </p>
+        <ol>
+            {% for vendor in reagent.getVendors() %}
+                <li>
+                    <a href="/vendors/{{ vendor.getId() }}">{{ vendor.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ reagent.getName() }} isn't sold by any vendors.</p>
+    {% endif %}
+
+    {# Recipes #}
+    {% if reagent.getRecipes()|length > 0 %}
+        <p>{{ reagent.getName() }} is used by the following recipes: </p>
+        <ul>
+            {% for profession, recipes in reagentRecipes %}
+                <li>
+                    <h6>{{ profession }}:</h6>
+                    <ol>
+                        {% for recipe in recipes %}
+                            <li>
+                                <a href="/recipes/{{ recipe.getId() }}">{{ recipe.getName() }}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ reagent.getName() }} is not used by any recipes.</p>
+    {% endif %}
+{% endblock information %}

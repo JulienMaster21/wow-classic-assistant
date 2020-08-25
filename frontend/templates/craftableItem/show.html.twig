@@ -1,0 +1,31 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ craftableItem.getName() }}{% endblock title %}
+
+{% block information %}
+    <p>Icon:
+        <img src="{{ craftableItem.getIconLinkUrl|replace({'small': 'medium', 'large': 'medium'}) }}"
+             alt="An icon representing the {{ craftableItem.getName() }} craftable item">
+    </p>
+    <a href="{{ craftableItem.getItemLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+    <p>Item slot: {{ craftableItem.getItemSlot() }}</p>
+
+    {% if craftableItem.getSellPrice() != null %}
+        <p>Sell price: {{ unitConverter.convertIntToMoneyAmount(craftableItem.getSellPrice())|raw }}</p>
+    {% else %}
+        <p>This item isn't sellable.</p>
+    {% endif %}
+
+    {% if craftableItem.getRecipes()|length > 0 %}
+        <p>{{ craftableItem.getName() }} is made by the following recipes: </p>
+        <ol>
+            {% for recipe in craftableItem.getRecipes() %}
+                <li>
+                    <a href="/recipes/{{ recipe.getId() }}">{{ recipe.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ craftableItem.getName() }} is not made by any recipes.</p>
+    {% endif %}
+{% endblock information %}

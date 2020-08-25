@@ -1,0 +1,75 @@
+{% extends 'entity/create.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+
+        {# User #}
+        <div class="form-group">
+            {{ form_label(form.user) }}
+            {{ form_errors(form.user) }}
+            {{ form_help(form.user) }}
+            <div>
+                {{ form_widget(form.user) }}
+            </div>
+        </div>
+
+        {# Faction #}
+        <div class="form-group">
+            {{ form_label(form.faction) }}
+            {{ form_errors(form.faction) }}
+            {{ form_help(form.faction) }}
+            <div>
+                {{ form_widget(form.faction) }}
+            </div>
+        </div>
+
+        {# Playable Class #}
+        <div class="form-group">
+            {{ form_label(form.playableClass, 'Class') }}
+            {{ form_errors(form.playableClass) }}
+            {{ form_help(form.playableClass) }}
+            <div>
+                {{ form_widget(form.playableClass) }}
+            </div>
+        </div>
+
+        {# Professions #}
+        <div class="form-group">
+            {{ form_label(form.professions) }}
+            {{ form_errors(form.professions) }}
+            {{ form_help(form.professions) }}
+            <ol>
+                {% for profession in form.professions %}
+                    <li>
+                        {{ form_widget(profession) }}
+                        {{ form_label(profession, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {# Recipes #}
+        {# TODO dynamically show recipes from selected professions (JQuery and DOM) #}
+        <div class="form-group">
+            {{ form_label(form.recipes) }}
+            {{ form_errors(form.recipes) }}
+            {{ form_help(form.recipes) }}
+            {% for profession in form.recipes.vars.choices %}
+                <h6>{{ profession.label }}:</h6>
+                <ol>
+                    {% for choice in profession.choices %}
+                        <li>
+                            {{ form_widget(form.recipes[choice.value]) }}
+                            {{ form_label(form.recipes[choice.value], null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endfor %}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

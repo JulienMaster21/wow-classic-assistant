@@ -1,0 +1,35 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ vendor.getName() }}{% endblock title %}
+
+{% block information %}
+    <a href="{{ vendor.getVendorLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+    <p>Reaction to Alliance: {{ vendor.getReactionToAlliance }}</p>
+    <p>Reaction to Horde: {{ vendor.getReactionToHorde }}</p>
+
+    {% if vendor.getLocations()|length > 0 %}
+        <p>{{ vendor.getName() }} appears in the following locations: </p>
+        <ul>
+            {% for location in vendor.getLocations() %}
+                <li>
+                    <a href="/locations/{{ location.getId() }}">{{ location.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ vendor.getName() }} doesn't have a known location.</p>
+    {% endif %}
+
+    {% if vendor.getReagents()|length > 0 %}
+        <p>{{ vendor.getName() }} sells the following reagents: </p>
+        <ol>
+            {% for reagent in vendor.getReagents() %}
+                <li>
+                    <a href="/reagents/{{ reagent.getId() }}">{{ reagent.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ vendor.getName() }} doesn't sell any reagents.</p>
+    {% endif %}
+{% endblock information %}

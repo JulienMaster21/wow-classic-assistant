@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }}{% endblock title %}
+
+{% block content %}
+    <h1 class="text-center">Profile</h1>
+    <p>Username: {{ user.getUsername() }}</p>
+    <p>Email: {{ user.getEmail() }}</p>
+    <p>You have the following roles:
+    {% for role in user.getRoles() %}
+        {% if user.getRoles()[(user.getRoles()|length - 1)] is same as(role) %}
+            {{ (role|slice(5, (role|length)))|capitalize }}.
+        {% else %}
+            {{ (role|slice(5, (role|length)))|capitalize }},
+        {% endif %}
+    {% endfor %}
+    <div class="container text-center">
+        <a href="/">
+            Back to home
+        </a>
+    </div>
+{% endblock content %}

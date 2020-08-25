@@ -1,0 +1,20 @@
+{% block text_label %}
+    <i class="fas {{ icon }}"></i> {{ form_label(form) }}
+{% endblock %}
+
+{% block integer_label %}
+    <i class="fas {{ icon }}"></i> {{ form_label(form) }}
+{% endblock %}
+
+{% block choice_label %}
+    <i class="fas {{ icon }}"></i> {{ form_label(form) }}
+{% endblock %}
+
+{% block checkbox_row %}
+    <div class="{{ row_attr.class }}">
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        {{ form_label(form) }}
+        {{ form_help(form) }}
+    </div>
+{% endblock checkbox_row %}

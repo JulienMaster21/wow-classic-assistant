@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock title %}
+
+{% block content %}
+    <h3 class="my-3 text-center">Register your account</h3>
+
+    <div class="container-fluid px-5 mb-3">
+        {{ form(form) }}
+    </div>
+
+    <div class="container-fluid">
+        <ul class="ul-without-icon">
+            <li>
+                <a href="/login">Already have an account? Login here.</a>
+            </li>
+            <li>
+                <a href="/">Back to home</a>
+            </li>
+        </ul>
+    </div>
+{% endblock content %}

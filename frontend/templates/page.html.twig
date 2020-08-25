@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% use 'navbar.html.twig' with navbar as parent_navbar %}
+{% use 'messages.html.twig' with messages as parent_messages %}
+{% use 'footer.html.twig' with footer as parent_footer %}
+
+{# Override messages #}
+{% block messages %}{% endblock messages %}
+
+{# Content #}
+{% block content %}
+
+    {# Header/Navbar #}
+    {% block navbar %}
+        {{ block('parent_navbar') }}
+    {% endblock navbar %}
+
+    {# Messages #}
+    {% block pageMessages %}
+        {{ block('parent_messages') }}
+    {% endblock pageMessages %}
+
+    {# Page content #}
+    {% block pageContent %}{% endblock pageContent %}
+
+    {# Footer #}
+    {% block footer %}
+        {{ block('parent_footer') }}
+    {% endblock footer %}
+
+{% endblock content %}

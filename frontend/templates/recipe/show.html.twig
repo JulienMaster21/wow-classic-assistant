@@ -1,0 +1,90 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ recipe.getName() }}{% endblock title %}
+
+{% block information %}
+    <p>Icon:
+        <img src="{{ recipe.getIconLinkUrl|replace({'small': 'medium', 'large': 'medium'}) }}"
+             alt="An icon representing the {{ recipe.getName() }} recipe">
+    </p>
+    <a href="{{ recipe.getRecipeLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+
+    {% if recipe.getMinimumAmountCreated() != recipe.getMaximumAmountCreated() %}
+        <p>Amount created: {{ recipe.getMinimumAmountCreated() }} - {{ recipe.getMaximumAmountCreated }}</p>
+    {% else %}
+        <p>Amount created: {{ recipe.getMinimumAmountCreated() }}</p>
+    {% endif %}
+
+    <p>Difficulty requirement: {{ recipe.getDifficultyRequirement() }}</p>
+    <p>Difficulty categories:
+        <span class="contrast">
+                                <span class="difficulty-category-1">{{ recipe.getDifficultyCategory1() }}</span>
+                                <span class="difficulty-category-2">{{ recipe.getDifficultyCategory2() }}</span>
+                                <span class="difficulty-category-3">{{ recipe.getDifficultyCategory3() }}</span>
+                                <span class="difficulty-category-4">{{ recipe.getDifficultyCategory4() }}</span>
+        </span>
+    </p>
+
+    <p>Profession: {{ recipe.getProfession().getName() }}</p>
+
+    {% if recipe.getRecipeItem() != null %}
+        <p>Recipe item:
+            <a href="/recipe-items/{{ recipe.getRecipeItem().getId() }}">{{ recipe.getRecipeItem().getName() }}</a>
+        </p>
+    {% else %}
+        <p>{{ recipe.getName() }} isn't taught by a recipe item.</p>
+    {% endif %}
+
+    {% if recipe.getCraftableItem() != null %}
+        <p>
+            <a href="/craftable-items/{{ recipe.getCraftableItem().getName() }}">{{ recipe.getCraftableItem().getName() }}</a>
+        </p>
+    {% else %}
+        <p>{{ recipe.getName() }} doesn't create an item.</p>
+    {% endif %}
+
+    {% if recipe.getTrainers()|length > 0 %}
+        <p>{{ recipe.getName() }} is taught by the following trainers: </p>
+        <ol>
+            {% for trainer in recipe.getTrainers() %}
+                <li>
+                    <a href="/trainers/{{ trainer.getId() }}">{{ trainer.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ recipe.getName() }} isn't taught by trainers.</p>
+    {% endif %}
+
+    {% if recipe.getTrainingCost() != null %}
+        <p>Training cost: {{ recipe.getTrainingCost() }}</p>
+    {% else %}
+        <p>{{ recipe.getName() }} can't be trained.</p>
+    {% endif %}
+
+    {% if recipe.getReagents()|length > 0 %}
+        <p>{{ recipe.getName() }} requires the following reagents: </p>
+        <ol>
+            {% for reagent in recipe.getReagents() %}
+                <li>
+                    <a href="/reagents/{{ reagent.getId() }}">{{ reagent.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>{{ recipe.getName() }} requires no reagents.</p>
+    {% endif %}
+
+    {% if recipe.getCharacters()|length > 0 %}
+        <p>The following characters know {{ recipe.getName() }}: </p>
+        <ol>
+            {% for character in recipe.getCharacters() %}
+                <li>
+                    <a href="/characters/{{ character.getId() }}">{{ character.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>No characters know {{ recipe.getName() }}.</p>
+    {% endif %}
+{% endblock information %}

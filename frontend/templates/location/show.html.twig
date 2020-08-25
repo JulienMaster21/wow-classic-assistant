@@ -1,0 +1,34 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ location.getName() }}{% endblock title %}
+
+{% block information %}
+    <a href="{{ location.getLocationLinkUrl() }}" target="_blank">Link to WoWHead page</a>
+    <p>Faction Status: {{ location.getFactionStatus() }}</p>
+
+    {% if location.getTrainers()|length > 0 %}
+        <p>These profession trainers are found in {{ location.getName() }}:</p>
+        <ul>
+            {% for trainer in location.getTrainers() %}
+                <li>
+                    <a href="/trainers/{{ trainer.getId() }}">{{ trainer.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No profession trainers are found in {{ location.getName() }}.</p>
+    {% endif %}
+
+    {% if location.getVendors()|length > 0 %}
+        <p>These vendors are found in {{ location.getName() }}:</p>
+        <ul>
+            {% for vendor in location.getVendors() %}
+                <li>
+                    <a href="/vendors/{{ vendor.getId() }}">{{ vendor.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No vendors are found in {{ location.getName() }}.</p>
+    {% endif %}
+{% endblock information %}

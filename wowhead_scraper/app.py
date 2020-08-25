@@ -7,8 +7,6 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello World'
 
 
 @app.route('/update')
@@ -22,6 +20,7 @@ def update():
 def export():
     sql_connector = SQLConnector()
     sql_connector.update_tables_from_psv()
+    return 'Exported'
 
 
 if __name__ == '__main__':

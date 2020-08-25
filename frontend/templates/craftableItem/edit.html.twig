@@ -1,0 +1,33 @@
+{% extends 'entity/edit.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.itemLinkUrl) }}
+        {{ form_row(form.iconLinkUrl) }}
+        {{ form_row(form.itemSlot) }}
+        {{ form_row(form.sellPrice) }}
+
+        {# Recipes #}
+        <div class="form-group">
+            {{ form_label(form.recipes) }}
+            {{ form_errors(form.recipes) }}
+            {{ form_help(form.recipes) }}
+            {% for profession in form.recipes.vars.choices %}
+                <h6>{{ profession.label }}:</h6>
+                <ol>
+                    {% for choice in profession.choices %}
+                        <li>
+                            {{ form_widget(form.recipes[choice.value]) }}
+                            {{ form_label(form.recipes[choice.value], null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endfor %}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

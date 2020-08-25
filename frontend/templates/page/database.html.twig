@@ -1,0 +1,18 @@
+{% extends 'page.html.twig' %}
+
+{# Title #}
+{% block title %}Database{% endblock %}
+
+{# Page content #}
+{% block pageContent %}
+    <h2 class="ml-3 mt-3">The database consists of the following tables:</h2>
+    <ul>
+        {% for table in tables %}
+            {% if table.isPublic or is_granted(table.permission) %}
+                <li>
+                    <a href="{{ table.path }}">{{ table.name }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'entity/create.html.twig' %}
+
+{% block form %}
+    <div class="container-fluid px-5 mb-3">
+        {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.recipeLinkUrl) }}
+        {{ form_row(form.iconLinkUrl) }}
+        {{ form_row(form.difficultyRequirement) }}
+        {{ form_row(form.difficultyCategory1, {'label': 'Difficulty Category 1'}) }}
+        {{ form_row(form.difficultyCategory2, {'label': 'Difficulty Category 2'}) }}
+        {{ form_row(form.difficultyCategory3, {'label': 'Difficulty Category 3'}) }}
+        {{ form_row(form.difficultyCategory4, {'label': 'Difficulty Category 4'}) }}
+        {{ form_row(form.minimumAmountCreated) }}
+        {{ form_row(form.maximumAmountCreated) }}
+
+        {# Profession #}
+        <div class="form-group">
+            {{ form_label(form.profession) }}
+            {{ form_errors(form.profession) }}
+            {{ form_help(form.profession) }}
+            <div>
+                {{ form_widget(form.profession) }}
+            </div>
+        </div>
+
+        {# Craftable item #}
+        <div class="form-group">
+            {{ form_label(form.craftableItem) }}
+            {{ form_errors(form.craftableItem) }}
+            {{ form_help(form.craftableItem) }}
+            <div>
+                {{ form_widget(form.craftableItem) }}
+            </div>
+        </div>
+
+        {# Recipe item #}
+        <div class="form-group">
+            {{ form_label(form.recipeItem) }}
+            {{ form_errors(form.recipeItem) }}
+            {{ form_help(form.recipeItem) }}
+            <div>
+                {{ form_widget(form.recipeItem) }}
+            </div>
+        </div>
+
+        {# Reagents #}
+        <div class="form-group">
+            {{ form_label(form.reagents) }}
+            {{ form_errors(form.reagents) }}
+            {{ form_help(form.reagents) }}
+            <ol>
+                {% for reagent in form.reagents %}
+                    <li>
+                        {{ form_widget(reagent) }}
+                        {{ form_label(reagent, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {# Trainers #}
+        <div class="form-group">
+            {{ form_label(form.trainers) }}
+            {{ form_errors(form.trainers) }}
+            {{ form_help(form.trainers) }}
+            <ol>
+                {% for trainer in form.trainers %}
+                    <li>
+                        {{ form_widget(trainer) }}
+                        {{ form_label(trainer, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+        {{ form_row(form.trainingCost) }}
+
+        {# Characters #}
+        <div class="form-group">
+            {{ form_label(form.characters) }}
+            {{ form_errors(form.characters) }}
+            {{ form_help(form.characters) }}
+            <ol>
+                {% for character in form.characters %}
+                    <li>
+                        {{ form_widget(character) }}
+                        {{ form_label(character, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock form %}

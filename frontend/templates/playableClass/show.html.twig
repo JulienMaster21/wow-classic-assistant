@@ -1,0 +1,18 @@
+{% extends 'entity/show.html.twig' %}
+
+{% block title %}{{ playableClass.getName() }}{% endblock title %}
+
+{% block information %}
+    {% if playableClass.getCharacters()|length > 0 %}
+        <p>These characters have the class of {{ playableClass.getName() }}:</p>
+        <ul>
+            {% for character in playableClass.getCharacters() %}
+                <li>
+                    <a href="/characters/{{ character.getId() }}">{{ character.getName() }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No characters have the class of {{ playableClass.getName() }}.</p>
+    {% endif %}
+{% endblock information %}
