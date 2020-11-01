@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.ClientValidator = void 0;
 var TextInput_1 = require("./TextInput");
 var $ = require("jquery");
 var Form_1 = require("./Form");

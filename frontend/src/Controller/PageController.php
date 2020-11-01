@@ -7,12 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class PageController
+ * @package App\Controller
+ */
 class PageController extends AbstractController {
 
     /**
      * @var array
      */
-    private $pages;
+    private array $pages;
 
     public function __construct() {
 

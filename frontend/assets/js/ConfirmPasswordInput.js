@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+exports.ConfirmPasswordInput = void 0;
 var PasswordInput_1 = require("./PasswordInput");
 var ConfirmPasswordInput = /** @class */ (function (_super) {
     __extends(ConfirmPasswordInput, _super);

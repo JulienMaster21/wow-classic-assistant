@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.NavigationHandler = void 0;
 var App_1 = require("./App");
 var $ = require("jquery");
 var DatabaseEntityCollection_1 = require("./DatabaseEntityCollection");
@@ -110,7 +111,6 @@ var NavigationHandler = /** @class */ (function () {
                 _this.updateTable();
             });
             _this.updatePageSelectOptions();
-            console.log('loading is done');
         });
     }
     NavigationHandler.prototype.updateTable = function () {

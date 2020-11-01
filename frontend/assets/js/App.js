@@ -1,7 +1,9 @@
 "use strict";
 exports.__esModule = true;
+exports.app = exports.App = void 0;
 var ClientValidator_1 = require("./ClientValidator");
 var $ = require("jquery");
+var DatabaseUpdater_1 = require("./DatabaseUpdater");
 require('bootstrap');
 require('@fortawesome/fontawesome-free/css/all.min.css');
 require('@fortawesome/fontawesome-free/js/all.js');
@@ -14,6 +16,8 @@ var App = /** @class */ (function () {
         });
         // Initialise client validation
         this.clientValidator = new ClientValidator_1.ClientValidator();
+        // Initialise database updater
+        this.databaseUpdater = new DatabaseUpdater_1.DatabaseUpdater();
         // Initialise navigation handler as null
         this.navigationHandler = null;
     }
@@ -23,6 +27,9 @@ var App = /** @class */ (function () {
     // Getters and setters
     App.prototype.getClientValidator = function () {
         return this.clientValidator;
+    };
+    App.prototype.getDatabaseUpdater = function () {
+        return this.databaseUpdater;
     };
     App.prototype.getNavigationHandler = function () {
         return this.navigationHandler;

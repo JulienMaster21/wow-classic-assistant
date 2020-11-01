@@ -30,7 +30,6 @@ export class Form {
             // Check if element is a div and has children
             if (formGroup.nodeName === 'DIV' &&
                 formGroup.childNodes.length > 0) {
-                console.log(formGroup);
                 formGroup.childNodes.forEach((child: ChildNode) => {
                     if (child.nodeName === 'INPUT') {
                         let input: HTMLInputElement = <HTMLInputElement>child;

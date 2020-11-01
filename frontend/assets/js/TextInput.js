@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+exports.TextInput = void 0;
 var Input_1 = require("./Input");
 var TextInput = /** @class */ (function (_super) {
     __extends(TextInput, _super);

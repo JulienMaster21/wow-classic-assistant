@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+exports.EmailInput = void 0;
 var TextInput_1 = require("./TextInput");
 var EmailInput = /** @class */ (function (_super) {
     __extends(EmailInput, _super);

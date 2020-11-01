@@ -135,8 +135,6 @@ export class NavigationHandler {
             });
 
             this.updatePageSelectOptions();
-
-            console.log('loading is done');
         });
     }
 

@@ -7,10 +7,10 @@
         <meta name="description" content="An open-source tool to help with your adventures in Classic World of Warcraft">
         <meta name="keywords" content="WoW,Professions,Assistant,World of Warcraft,Guide">
         <meta name="author" content="Julien Kenneth Pleijte">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src 'self' wow.zamimg.com">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}WoW Classic Assistant{% endblock title %}</title>
         {# Link tags #}
+        <link rel="icon" type="image/ico" href="{{ asset('build/images/assistant.ico') }}">
         {% block linkEntries %}
             {{ encore_entry_link_tags('global') }}
         {% endblock linkEntries %}

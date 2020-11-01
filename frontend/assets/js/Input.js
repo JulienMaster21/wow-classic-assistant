@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.Input = void 0;
 var Input = /** @class */ (function () {
     function Input(identifier, name, element) {
         if (element === void 0) { element = null; }

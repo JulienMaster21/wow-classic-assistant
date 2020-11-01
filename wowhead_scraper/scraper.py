@@ -1,3 +1,5 @@
+import shutil
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.firefox.options import Options
@@ -5,8 +7,8 @@ from selenium.webdriver.common.keys import *
 from selenium.common.exceptions import *
 import os
 import time
-import datetime
 from wowhead_scraper.exceptions import *
+from wowhead_scraper.time import TimeHelper
 
 
 class WowheadScraper:
@@ -31,46 +33,77 @@ class WowheadScraper:
 
         print('Starting...')
 
-        # Start recording time
-        start_time = time.time()
+        # Clear data directory
+        clear_data_results = self.clear_data()
+        self.print_time(clear_data_results['start_time'],
+                        clear_data_results['end_time'],
+                        'clear',
+                        'data cache')
 
         # Get professions from index
-        self.get_professions()
-        end_of_professions_time = self.print_loading_time(start_time, 'professions')
+        professions_results = self.get_professions()
+        self.print_time(professions_results['start_time'],
+                        professions_results['end_time'],
+                        'load',
+                        'professions')
 
         # Get locations from index
-        self.get_locations()
-        end_of_locations_time = self.print_loading_time(end_of_professions_time, 'locations')
+        locations_results = self.get_locations()
+        self.print_time(locations_results['start_time'],
+                        locations_results['end_time'],
+                        'load',
+                        'locations')
 
         # Get vendors from index
         # Link vendor_location
-        self.get_vendors()
-        end_of_vendors_time = self.print_loading_time(end_of_locations_time, 'vendors')
+        vendors_results = self.get_vendors()
+        self.print_time(vendors_results['start_time'],
+                        vendors_results['end_time'],
+                        'load',
+                        'vendors')
 
         # Get reagents from index
-        self.get_reagents()
-        end_of_reagents_time = self.print_loading_time(end_of_vendors_time, 'reagents')
+        reagents_results = self.get_reagents()
+        self.print_time(reagents_results['start_time'],
+                        reagents_results['end_time'],
+                        'load',
+                        'reagents')
 
         # Link reagent_vendor
-        self.get_reagent_details()
-        end_of_reagents_details_time = self.print_loading_time(end_of_reagents_time, 'reagent details')
+        reagent_details_results = self.get_reagent_details()
+        self.print_time(reagent_details_results['start_time'],
+                        reagent_details_results['end_time'],
+                        'load',
+                        'reagent details')
 
         # Get crafted items for each profession
-        self.get_craftable_items()
-        end_of_craftable_items_time = self.print_loading_time(end_of_reagents_details_time, 'craftable items')
+        craftable_items_results = self.get_craftable_items()
+        self.print_time(craftable_items_results['start_time'],
+                        craftable_items_results['end_time'],
+                        'load',
+                        'craftable items')
 
         # Get profession data for each profession
         # Including: trainers, recipes, and recipe items
         # Link: recipe_reagent, and recipe_id on craftable items
-        self.get_profession_data()
-        end_of_profession_data_time = self.print_loading_time(end_of_craftable_items_time, 'profession data')
+        profession_data_results = self.get_profession_data()
+        self.print_time(profession_data_results['start_time'],
+                        profession_data_results['end_time'],
+                        'load',
+                        'profession data')
 
         # Get recipe details
         # Link recipe_trainer, recipe item id
-        self.get_recipe_details()
-        self.print_loading_time(end_of_profession_data_time, 'recipe details')
+        recipe_details_results = self.get_recipe_details()
+        self.print_time(recipe_details_results['start_time'],
+                        recipe_details_results['end_time'],
+                        'load',
+                        'recipe details')
 
-        self.print_loading_time(start_time, 'all data')
+        self.print_time(professions_results['start_time'],
+                        recipe_details_results['end_time'],
+                        'load',
+                        'all data')
 
         # Check data
         self.check_data()
@@ -100,7 +133,32 @@ class WowheadScraper:
         if amount_of_correct_tables == amount_of_tables:
             print('All tables have the expected amount of rows.\n')
 
+    def clear_data(self):
+
+        # Start timer
+        start_time = time.time()
+
+        # Check if data directory exists
+        if not os.path.isdir('data'):
+            os.makedirs('data')
+
+        # Delete all files and directories
+        self.clear_directory('data/')
+
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
+
     def get_professions(self):
+
+        # Start timer
+        start_time = time.time()
 
         # Create professions psv file
         profession_columns = tuple([('name',
@@ -153,6 +211,16 @@ class WowheadScraper:
         if 'profession' not in self.expected_row_amount.keys():
             self.expected_row_amount['profession'] = 0
         self.expected_row_amount['profession'] += len(secondary_professions)
+
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
 
     def get_main_professions_row_data(self):
 
@@ -218,6 +286,9 @@ class WowheadScraper:
 
     def get_locations(self):
 
+        # Start timer
+        start_time = time.time()
+
         # Create locations psv file
         location_columns = tuple([('name',
                                    'location_link_url',
@@ -240,6 +311,16 @@ class WowheadScraper:
 
         # Get expected row amount
         self.expected_row_amount['location'] = self.get_expected_row_amount()
+
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
 
     def get_locations_row_data(self):
 
@@ -271,6 +352,9 @@ class WowheadScraper:
 
     def get_vendors(self):
 
+        # Start timer
+        start_time = time.time()
+
         # Create vendors psv file
         vendor_columns = tuple([('name',
                                  'vendor_link_url',
@@ -280,7 +364,7 @@ class WowheadScraper:
 
         # Create vendor location psv file
         vendor_location_columns = tuple([('vendor_id',
-                                              'location_id')])
+                                          'location_id')])
         self.create_psv('vendor_location', vendor_location_columns)
 
         # Get location names
@@ -315,6 +399,16 @@ class WowheadScraper:
 
         # Get expected row amount
         self.expected_row_amount['vendor'] = self.get_expected_row_amount()
+
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
 
     def get_vendors_row_data(self, location_names):
 
@@ -365,7 +459,7 @@ class WowheadScraper:
 
                         # Link vendors to locations
                         self.write_psv_lines('vendor_location', tuple([(vendor_id,
-                                                                            location_id)]))
+                                                                        location_id)]))
                 else:
                     pass
 
@@ -379,6 +473,9 @@ class WowheadScraper:
                 not_on_last_page = False
 
     def get_reagents(self):
+
+        # Start timer
+        start_time = time.time()
 
         # Create reagents psv file
         reagent_columns = tuple([('name',
@@ -400,7 +497,7 @@ class WowheadScraper:
 
         # Create reagent source psv file
         reagent_source = tuple([('reagent_id',
-                                     'source_id')])
+                                 'source_id')])
         self.create_psv('reagent_source', reagent_source)
 
         # Get location names
@@ -441,6 +538,16 @@ class WowheadScraper:
 
         # Get expected row amount
         self.expected_row_amount['reagent'] = self.get_expected_row_amount()
+
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
 
     def get_reagents_row_data(self, location_names, profession_names):
 
@@ -530,10 +637,13 @@ class WowheadScraper:
 
     def get_reagent_details(self):
 
+        # Start timer
+        start_time = time.time()
+
         # Create reagent vendor psv file
         reagent_vendor_columns = tuple([('reagent_id',
-                                             'vendor_id',
-                                             'buy_price')])
+                                         'vendor_id',
+                                         'buy_price')])
         self.create_psv('reagent_vendor', reagent_vendor_columns)
 
         # Iterate through buyable reagents
@@ -597,6 +707,16 @@ class WowheadScraper:
         # Print newline
         print('\n')
 
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
+
     def get_reagent_details_sold_by_row_data(self, reagent_id, vendor_names):
 
         not_on_last_page = True
@@ -617,14 +737,17 @@ class WowheadScraper:
 
                 # Write line to reagent vendor psv file
                 self.write_psv_lines('reagent_vendor', tuple([(reagent_id,
-                                                                   vendor_id,
-                                                                   buy_price)]))
+                                                               vendor_id,
+                                                               buy_price)]))
 
             # Check if on last page
             if self.check_if_on_last_page(tab_id='tab-sold-by'):
                 not_on_last_page = False
 
     def get_craftable_items(self):
+
+        # Start timer
+        start_time = time.time()
 
         # Create craftable items psv file
         craftable_item_columns = tuple([('name',
@@ -686,6 +809,16 @@ class WowheadScraper:
                 self.expected_row_amount['craftable_item'] = 0
             self.expected_row_amount['craftable_item'] += self.get_expected_row_amount()
 
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
+
     def get_craftable_items_row_data(self, craftable_item_names):
 
         not_on_last_page = True
@@ -731,6 +864,9 @@ class WowheadScraper:
                 not_on_last_page = False
 
     def get_profession_data(self):
+
+        # Start timer
+        start_time = time.time()
 
         # Create trainers psv file
         trainer_columns = tuple([('name',
@@ -926,6 +1062,16 @@ class WowheadScraper:
                 if 'recipe' not in self.expected_row_amount.keys():
                     self.expected_row_amount['recipe'] = 0
                 self.expected_row_amount['recipe'] += self.get_expected_row_amount(tab_id='tab-recipes')
+
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
 
     def get_trainers_row_data(self, profession_id, location_names, trainers):
 
@@ -1239,6 +1385,9 @@ class WowheadScraper:
 
     def get_recipe_details(self):
 
+        # Start timer
+        start_time = time.time()
+
         # Set standard values
         current_recipe_index = 0
         recipe_trainer_length = 0
@@ -1317,8 +1466,15 @@ class WowheadScraper:
         # Replace old with new values
         self.replace_values_in_psv_file('recipe', new_values)
 
-        # Remove temporary file
-        os.remove('data/temporary_recipe_details.psv')
+        # End timer
+        end_time = time.time()
+
+        results = {
+            'start_time': start_time,
+            'end_time': end_time
+        }
+
+        return results
 
     def get_single_recipe_details(self,
                                   recipe,
@@ -1461,7 +1617,7 @@ class WowheadScraper:
 
                     # Write row to recipe trainer psv file
                     self.write_psv_lines('recipe_trainer', tuple([(recipe_id,
-                                                                       trainer_id)]))
+                                                                   trainer_id)]))
 
             # Check if on last page
             if self.check_if_on_last_page(tab_id='tab-taught-by-npc'):
@@ -1726,8 +1882,8 @@ class WowheadScraper:
     def create_psv(self, filename, columns):
 
         # Check if data directory exists
-        if not os.path.isdir('../data'):
-            os.makedirs('../data')
+        if not os.path.isdir('data'):
+            os.makedirs('data')
 
         # Open file
         psv_file = open('data/' + filename + '.psv', 'w')
@@ -1835,12 +1991,26 @@ class WowheadScraper:
         self.create_psv(filename, columns)
         self.write_psv_lines(filename, new_rows)
 
-    def print_loading_time(self, start_time, data_name):
+    def remove_file(self, file_path):
 
-        end_time = time.time()
-        difference = round(end_time - start_time)
-        print('It took: {} to load the {}.\n'.format(str(datetime.timedelta(seconds=difference)), data_name))
-        return end_time
+        os.remove(file_path)
+
+    def clear_directory(self, directory_path):
+
+        for fileOrDir in os.listdir(directory_path):
+            if os.path.isdir(directory_path + fileOrDir):
+                shutil.rmtree(directory_path + fileOrDir)
+            else:
+                self.remove_file(directory_path + fileOrDir)
+
+    def print_time(self, start_time, end_time, action, name):
+
+        time_helper = TimeHelper()
+        time_string = str(time_helper.get_timedelta_from_time_periods(start_time=start_time,
+                                                                      end_time=end_time))
+        print('It took: {} to {} the {}.\n'.format(time_string,
+                                                   action,
+                                                   name))
 
     def move_cursor_to_top_left(self):
         ActionChains(self.driver) \

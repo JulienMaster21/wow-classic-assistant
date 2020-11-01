@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.Form = void 0;
 var TextInput_1 = require("./TextInput");
 var EmailInput_1 = require("./EmailInput");
 var ConfirmPasswordInput_1 = require("./ConfirmPasswordInput");
@@ -19,7 +20,6 @@ var Form = /** @class */ (function () {
             // Check if element is a div and has children
             if (formGroup.nodeName === 'DIV' &&
                 formGroup.childNodes.length > 0) {
-                console.log(formGroup);
                 formGroup.childNodes.forEach(function (child) {
                     if (child.nodeName === 'INPUT') {
                         var input = child;

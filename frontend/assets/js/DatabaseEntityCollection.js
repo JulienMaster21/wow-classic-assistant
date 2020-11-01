@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.DatabaseEntityCollection = void 0;
 var DatabaseEntityCollection = /** @class */ (function () {
     function DatabaseEntityCollection(entities) {
         this.databaseEntities = entities;

@@ -129,6 +129,14 @@ nav {
     background-image: url("../images/money_copper.gif");
 }
 
+.success {
+    color: $success-color;
+}
+
+.error {
+    color: $error-color;
+}
+
 .difficulty-category-1 {
     color: $category1-color;
 }

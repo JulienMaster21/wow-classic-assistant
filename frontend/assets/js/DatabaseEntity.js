@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.DatabaseEntity = void 0;
 var DatabaseEntity = /** @class */ (function () {
     function DatabaseEntity(id, htmlString) {
         this.id = id;
