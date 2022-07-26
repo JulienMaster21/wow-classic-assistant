@@ -1,0 +1,494 @@
+{
+    "classic": {
+        "craftable_item": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "icon_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": false
+            },
+            "item_slot": {
+                "type": "string",
+                "not_null": true,
+                "enum": "item_slots",
+                "unique": false
+            },
+            "sell_price": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": false,
+                "unique": false
+            }
+        },
+        "enchantment": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "icon_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": false
+            },
+            "item_category": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "location": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "location_type": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "faction_status": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "required_level": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": false,
+                "unique": false
+            },
+            "minimum_level": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": false,
+                "unique": false
+            },
+            "maximum_level": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": false,
+                "unique": false
+            }
+        },
+        "location_vendor": {
+            "vendor_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "location_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "profession": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "icon_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": false
+            },
+            "is_main_profession": {
+                "type": "boolean",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "profession_trainer": {
+            "trainer_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "profession_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "reagent": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "icon_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "reagent_recipe": {
+            "recipe_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "reagent_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "amount": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "reagent_source": {
+            "reagent_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "source_name": {
+                "type": "string",
+                "not_null": true,
+                "enum": "sources",
+                "unique": false
+            }
+        },
+        "reagent_vendor": {
+            "vendor_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "reagent_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "buy_price": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "recipe": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "icon_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": false
+            },
+            "difficulty_requirement": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "difficulty_category_1": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "difficulty_category_2": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "difficulty_category_3": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "difficulty_category_4": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "minimum_amount_created": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "maximum_amount_created": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "training_cost": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": false,
+                "unique": false
+            },
+            "profession_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "recipe_item_name": {
+                "type": "string",
+                "not_null": false,
+                "unique": false
+            },
+            "craftable_item_name": {
+                "type": "string",
+                "not_null": false,
+                "unique": false
+            },
+            "enchantment_name": {
+                "type": "string",
+                "not_null": false,
+                "unique": false
+            }
+        },
+        "recipe_item": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "icon_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": false
+            },
+            "required_skill_level": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": false
+            },
+            "profession_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "recipe_specialisation": {
+            "recipe_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "specialisation_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "recipe_trainer": {
+            "recipe_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "trainer_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "source": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "enum": "sources",
+                "unique": true
+            }
+        },
+        "specialisation": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "profession_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "trainer": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "reaction_to_alliance": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "reaction_to_horde": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "location_name": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        },
+        "vendor": {
+            "name": {
+                "type": "string",
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_id": {
+                "type": "integer",
+                "minimum": 1,
+                "not_null": true,
+                "unique": true
+            },
+            "wowhead_link_url": {
+                "type": "string",
+                "format": "url",
+                "not_null": true,
+                "unique": true
+            },
+            "reaction_to_alliance": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            },
+            "reaction_to_horde": {
+                "type": "string",
+                "not_null": true,
+                "unique": false
+            }
+        }
+    }
+}

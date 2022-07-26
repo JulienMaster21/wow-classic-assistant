@@ -9,6 +9,7 @@ data/
 
 # Leave out development logs
 geckodriver.log
+logs/
 
 # Leave out config files
 db_config

@@ -1,406 +1,212 @@
-import datetime
 import time
 
-from flask import Flask, make_response
+from flask import Flask, Response
+from flask_restx import Api, Resource
+from json import dumps
 from wowhead_scraper.scraper import WowheadScraper
 from wowhead_scraper.sql_connector import SQLConnector
-from wowhead_scraper.time import TimeHelper
+from wowhead_scraper.time import convert_timedelta_to_dictionary, get_timedelta_from_time_periods
 
 app = Flask(__name__)
-
-frontendDomain = 'https://wow-classic-assistant.test'
-
-
-@app.route('/')
-def home():
-    return 'Hello'
-
-
-@app.route('/clear-data')
-def clear_data():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    try:
-        wowhead_scraper = WowheadScraper()
-        clear_data_result = wowhead_scraper.clear_data()
-        scraper_delta = time_helper.get_timedelta_from_time_periods(clear_data_result['start_time'],
-                                                                    clear_data_result['end_time'])
-        scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    except ():
-        scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Content-Type'] = 'application/json'
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/professions')
-def get_professions():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     professions_result = wowhead_scraper.get_professions()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(professions_result['start_time'], professions_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Content-Type'] = 'application/json'
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/locations')
-def get_locations():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     locations_result = wowhead_scraper.get_locations()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(locations_result['start_time'], locations_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/vendors')
-def get_vendors():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     vendors_result = wowhead_scraper.get_vendors()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(vendors_result['start_time'], vendors_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/reagents')
-def get_reagents():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     reagents_result = wowhead_scraper.get_reagents()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(reagents_result['start_time'], reagents_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/reagent-details')
-def get_reagent_details():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     reagent_details_result = wowhead_scraper.get_reagent_details()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(reagent_details_result['start_time'], reagent_details_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/craftable-items')
-def get_craftable_items():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     craftable_items_result = wowhead_scraper.get_craftable_items()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(craftable_items_result['start_time'], craftable_items_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/profession-data')
-def get_profession_data():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     profession_data_result = wowhead_scraper.get_profession_data()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(profession_data_result['start_time'], profession_data_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/recipe-details')
-def get_recipe_details():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     recipe_details_result = wowhead_scraper.get_recipe_details()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(recipe_details_result['start_time'], recipe_details_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/check-data')
-def check_data():
-
-    # Start timer
-    start_response_time = time.time()
-
-    # Initialise helpers
-    time.sleep(2)
-    time_helper = TimeHelper()
-
-    # Perform scraper function
-    # try:
-    #     wowhead_scraper = WowheadScraper()
-    #     check_data_result = wowhead_scraper.check_data()
-    #     scraper_delta = time_helper.get_timedelta_from_time_periods(check_data_result['start_time'], check_data_result['end_time'])
-    #     scraper_time = time_helper.convert_timedelta_to_dictionary(scraper_delta)
-    # except ():
-    scraper_time = None
-
-    # End timer
-    end_response_time = time.time()
-    response_delta = time_helper.get_timedelta_from_time_periods(start_response_time, end_response_time)
-    response_time = time_helper.convert_timedelta_to_dictionary(response_delta)
-
-    data = {
-        'response_time': response_time,
-        'scraper_time': scraper_time
-    }
-
-    response = make_response(data)
-    response.headers['Access-Control-Allow-Origin'] = frontendDomain
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Vary'] = 'origin'
-    response.headers['Timing-Allow-Origin'] = frontendDomain
-    return response
-
-
-@app.route('/update')
-def update():
-    wowhead_scraper = WowheadScraper()
-    wowhead_scraper.update_psvs()
-    return 'Updated'
-
-
-@app.route('/export')
-def export():
+# TODO Refactor routes to use flask restX
+api = Api(version="1.0",
+          title="WowheadScraper API",
+          description="")
+
+frontendDomain = "https://wow-classic-assistant.test"
+resources = ("professions",
+             "locations",
+             "vendors",
+             "reagents",
+             "enchantments",
+             "craftable_items",
+             "profession_data",
+             "specialisation_recipes",
+             "all")
+site_versions = ("classic",
+                 "old",
+                 "retail",
+                 "standard",
+                 "live",
+                 "ptr",
+                 "public test realm")
+
+
+# TODO Add scraper documentation here
+@app.route("/")
+def documentation():
+
+    return "Hello"
+
+
+@app.route("/get/<resource>/<site_version>")
+def get(resource: str, site_version: str):
+
+    if site_version in site_versions:
+        wowhead_scraper = WowheadScraper(site_version)
+        resource = resource.replace("-", "_")
+        if resource in resources:
+            result = getattr(wowhead_scraper, f"get_{resource}")()
+
+            return Response(response=dumps(result),
+                            status=200,
+                            mimetype="application/json")
+        else:
+            response = Response(response="Invalid scraper resource. "
+                                         "See the <a href=\"/\">documentation</a> for details.",
+                                status=404,
+                                mimetype="text/html")
+            return response
+    else:
+        response = Response(response="Invalid site version. See the <a href=\"/\">documentation</a> for details.",
+                            status=404,
+                            mimetype="text/html")
+        return response
+
+
+@app.route("/clear-data/<site_version>")
+def clear_data(site_version: str):
+    if site_version in site_versions:
+        wowhead_scraper = WowheadScraper(site_version)
+        wowhead_scraper.clear_data()
+        response = Response(response="Data cache is cleared.",
+                            status=200,
+                            mimetype="text/html")
+        return response
+    else:
+        response = Response(response="Invalid site version. See the <a href=\"/\">documentation</a> for details.",
+                            status=404,
+                            mimetype="text/html")
+        return response
+
+
+@app.route("/prepare-data/<site_version>")
+def prepare_data(site_version: str):
+    if site_version in site_versions:
+        wowhead_scraper = WowheadScraper(site_version)
+        wowhead_scraper.prepare_data_for_scraping()
+        response = Response(response="Data cache is ready for scraping.",
+                            status=200,
+                            mimetype="text/html")
+        return response
+    else:
+        response = Response(response="Invalid site version. See the <a href=\"/\">documentation</a> for details.",
+                            status=404,
+                            mimetype="text/html")
+        return response
+
+
+@app.route("/check-data/<site_version>")
+def check_data(site_version: str):
+    if site_version in site_versions:
+        wowhead_scraper = WowheadScraper(site_version)
+        wowhead_scraper.check_data()
+    else:
+        response = Response(response="Invalid site version. See the <a href=\"/\">documentation</a> for details.",
+                            status=404,
+                            mimetype="text/html")
+        return response
+
+
+@app.route("/scrape/<resource>/<site_version>")
+def scrape(resource: str, site_version: str):
+    if site_version in site_versions:
+        resource = resource.replace("-", "_")
+        if resource in resources:
+
+            # Add scrape prefix
+            resource = f"scrape_{resource}"
+
+            # Start timer
+            start_response_time = time.time()
+
+            # Perform scraper function
+            try:
+                wowhead_scraper = WowheadScraper(site_version)
+                result = getattr(wowhead_scraper, resource)()
+                scraper_delta = get_timedelta_from_time_periods(result["start_time"],
+                                                                result["end_time"])
+                scraper_time = convert_timedelta_to_dictionary(scraper_delta)
+            except ():
+                scraper_time = None
+
+            end_response_time = time.time()
+            response_delta = get_timedelta_from_time_periods(start_response_time, end_response_time)
+            response_time = convert_timedelta_to_dictionary(response_delta)
+
+            data = {
+                "response_time": response_time,
+                "scraper_time": scraper_time
+            }
+
+            response = Response(response=dumps(data),
+                                status=200,
+                                headers={
+                                    "Access-Control-Allow-Origin": frontendDomain,
+                                    "Access-Control-Allow-Methods": "GET, OPTIONS",
+                                    "Vary": "origin",
+                                    "Timing-Allow-Origin": frontendDomain,
+                                },
+                                mimetype="application/json")
+            return response
+        else:
+            response = Response(response="Invalid scraper resource. "
+                                         "See the <a href=\"/\">documentation</a> for details.",
+                                status=404,
+                                mimetype="text/html")
+            return response
+    else:
+        response = Response(response="Invalid site version. See the <a href=\"/\">documentation</a> for details.",
+                            status=404,
+                            mimetype="text/html")
+        return response
+
+
+@app.route("/export-to-db")
+def export_to_db():
     sql_connector = SQLConnector()
     sql_connector.update_tables_from_psv()
-    return 'Exported'
 
 
-if __name__ == '__main__':
+# Errors
+@app.errorhandler(403)
+def no_permission(e):
+    response = Response(response="You don't have permission to access this. If this is wrong, "
+                                 "please contact the administrator.",
+                        status=403,
+                        mimetype="text/html")
+    return response
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    response = Response(response="Invalid route. See the <a href=\"/\">documentation</a> for details.",
+                        status=404,
+                        mimetype="text/html")
+    return response
+
+
+@app.errorhandler(500)
+def server_error(e):
+    response = Response(response="Something went wrong on our end. Sorry for the inconvenience, "
+                                 "please contact the administrator.",
+                        status=404,
+                        mimetype="text/html")
+    return response
+
+
+# Initialise API
+# Put API routes below here
+api.init_app(app)
+
+
+@api.route('/hello')
+class HelloWorld(Resource):
+    def get(self):
+        return {
+            'hello': 'world'
+        }
+
+
+if __name__ == "__main__":
     app.run()
